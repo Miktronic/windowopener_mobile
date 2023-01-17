@@ -9,41 +9,37 @@ import ChangePassword from '@/screens/ChangePassword';
 import Settings from '@/screens/Settings';
 const Stack = createStackNavigator();
 
-const navHeaderBackImage = require('@/assets/images/navheader_left.png')
+const navHeaderBackImage = require('@/assets/images/navheader_left.png');
 
 const ProfileTab = () => {
   return (
-    <Stack.Navigator
-      screenOptions={{
-
-      }}
-    >
+    <Stack.Navigator screenOptions={{}}>
       <Stack.Screen
         name={Screens.profileMain}
         component={ProfileMain}
         options={{
           title: 'Profile',
           headerLeft: () => {
-            return <Image source={navHeaderBackImage} ml={4}/>
-          }
+            return <Image source={navHeaderBackImage} ml={4} />;
+          },
         }}
       />
       <Stack.Screen
         name={Screens.changePassword}
         component={ChangePassword}
         options={{
-          title: 'Change Password'
+          title: 'Change Password',
         }}
       />
       <Stack.Screen
         name={Screens.settings}
         component={Settings}
         options={{
-          title: 'Settings'
+          title: 'Settings',
         }}
       />
     </Stack.Navigator>
   );
-}
+};
 
 export default ProfileTab;
