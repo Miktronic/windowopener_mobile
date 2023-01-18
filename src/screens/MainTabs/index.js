@@ -15,7 +15,6 @@ const tabIconAlertActive = require('@/assets/images/ic_tab_alert_active.png');
 const tabIconProfile = require('@/assets/images/ic_tab_profile.png');
 const tabIconProfileActive = require('@/assets/images/ic_tab_profile_active.png');
 
-
 const MainTabs = () => {
   return (
     <Tab.Navigator screenOptions={{headerShown: false, tabBarShowLabel: false}}>
@@ -24,8 +23,10 @@ const MainTabs = () => {
         component={HomeTab}
         options={{
           tabBarIcon: ({focused}) => {
-            return <Image source={focused ? tabIconHomeActive: tabIconHome} h={6}/>
-          }
+            return (
+              <Image source={focused ? tabIconHomeActive : tabIconHome} h={6} />
+            );
+          },
         }}
       />
       <Tab.Screen
@@ -33,8 +34,13 @@ const MainTabs = () => {
         component={AlertTab}
         options={{
           tabBarIcon: ({focused}) => {
-            return <Image source={focused ? tabIconAlertActive: tabIconAlert} h={6}/>
-          }
+            return (
+              <Image
+                source={focused ? tabIconAlertActive : tabIconAlert}
+                h={6}
+              />
+            );
+          },
         }}
       />
       <Tab.Screen
@@ -42,12 +48,17 @@ const MainTabs = () => {
         component={ProfileTab}
         options={{
           tabBarIcon: ({focused}) => {
-            return <Image source={focused ? tabIconProfileActive: tabIconProfile} h={6}/>
-          }
+            return (
+              <Image
+                source={focused ? tabIconProfileActive : tabIconProfile}
+                h={6}
+              />
+            );
+          },
         }}
       />
     </Tab.Navigator>
-  )
-}
+  );
+};
 
 export default MainTabs;

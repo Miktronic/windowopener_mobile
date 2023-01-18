@@ -8,33 +8,33 @@ import {useNavigation} from '@react-navigation/native';
 import SearchDevices from '@/screens/SearchDevices';
 import AddDevice from '@/screens/AddDevice';
 import EditDevice from '@/screens/EditDevice';
+import OverViewSettings from '@/screens/OverViewSettings';
 const Stack = createStackNavigator();
-
-const navHeaderBackImage = require('@/assets/images/navheader_left.png')
-const iconAdd = require('@/assets/images/ic_add.png')
+const navHeaderBackImage = require('@/assets/images/navheader_left.png');
+const iconAdd = require('@/assets/images/ic_add.png');
 
 const HomeTab = () => {
   const nav = useNavigation();
   const onPressAdd = () => {
     nav.navigate(Screens.searchDevices);
-  }
+  };
   return (
-    <Stack.Navigator
-      screenOptions={{
-
-      }}
-    >
+    <Stack.Navigator screenOptions={{}}>
       <Stack.Screen
         name={Screens.homeDevices}
         component={HomeDevices}
         options={{
           title: 'Home',
           headerLeft: () => {
-            return <Image source={navHeaderBackImage} ml={4}/>
+            return <Image source={navHeaderBackImage} ml={4} />;
           },
           headerRight: () => {
-            return <TouchableOpacity style={{padding: 12}} onPress={onPressAdd}><Image source={iconAdd}/></TouchableOpacity>
-          }
+            return (
+              <TouchableOpacity style={{padding: 12}} onPress={onPressAdd}>
+                <Image source={iconAdd} />
+              </TouchableOpacity>
+            );
+          },
         }}
       />
       <Stack.Screen
@@ -52,8 +52,14 @@ const HomeTab = () => {
         component={SearchDevices}
         options={{title: 'Search Devices'}}
       />
+
+      <Stack.Screen
+        name={Screens.overview}
+        component={OverViewSettings}
+        options={{title: 'Settings'}}
+      />
     </Stack.Navigator>
   );
-}
+};
 
 export default HomeTab;

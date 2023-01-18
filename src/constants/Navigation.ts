@@ -14,5 +14,6 @@ export const Screens = {
   settings: 'settings',
   alertHistory: 'alertHistory',
   editDevice: 'editDevice',
-  forgetPassword: 'forgetPassword'
+  forgetPassword: 'forgetPassword',
+  overview: 'overview',
 };

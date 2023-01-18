@@ -1,10 +1,18 @@
 import React from 'react';
 import {Box, Switch, Image, Text, Stack, Icon} from 'native-base';
 import Feather from 'react-native-vector-icons/Feather';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, TouchableOpacity} from 'react-native';
+import {Screens} from '@/constants/Navigation';
+
 const outside = require('@/assets/myImages/outside.png');
 const onboard = require('@/assets/myImages/onboard.png');
+import {useNavigation} from '@react-navigation/native';
+
 const Overview = () => {
+  const nav = useNavigation();
+  const onPressAdd = () => {
+    nav.navigate(Screens.overview);
+  };
   return (
     <Box
       m={4}
@@ -28,7 +36,9 @@ const Overview = () => {
           <Text fontSize="16" fontWeight="500">
             Overview
           </Text>
-          <Icon as={Feather} name={'settings'} size={'md'} color={'grey'} />
+          <TouchableOpacity onPress={onPressAdd}>
+            <Icon as={Feather} name={'settings'} size={'md'} color={'grey'} />
+          </TouchableOpacity>
         </Stack>
 
         <Stack direction="row" space={3}>
