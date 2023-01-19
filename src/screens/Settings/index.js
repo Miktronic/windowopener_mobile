@@ -29,7 +29,7 @@ const Settings = () => {
       store.hud.show();
       const { name, gps_location, address, zip_code, latitude, longitude } = await Api.getUserProfile();
       setName(name);
-      setIsSelected(gps_location);
+      setIsSelected(gps_location == 1 ? true : false);
       setAddress(address);
       setZipCode(zip_code);
       setLatitude(latitude);
@@ -217,7 +217,7 @@ const Settings = () => {
         <HStack mr={5}>
             <Switch
               size="lg"
-              defaultIsChecked={isSelected}
+              isChecked={isSelected}
               onValueChange={(value) => getDeviceLocation(value)}
             />
           </HStack>
