@@ -56,7 +56,7 @@ const HomeTab = () => {
       <Stack.Screen
         name={Screens.overview}
         component={OverViewSettings}
-        options={{title: 'Settings'}}
+        options={{title: 'Automation Settings'}}
       />
     </Stack.Navigator>
   );
