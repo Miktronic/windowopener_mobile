@@ -78,9 +78,9 @@ const OverViewSettings = () => {
                 // value: vm.password,
                 // onChangeText: vm.setPassword,
               }}>
-              <Select.Item label="Select Device" value="ux" />
-              <Select.Item label="UX Research" value="ux" />
-              <Select.Item label="UX Research" value="ux" />
+              <Select.Item label="Select Device" value="" />
+              <Select.Item label="Device 1" value="1" />
+              <Select.Item label="Device 2" value="2" />
             </TitledPlainSelect>
             <FormControl.ErrorMessage>
               {vm.errors.password}
