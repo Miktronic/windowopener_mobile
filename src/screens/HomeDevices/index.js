@@ -26,8 +26,8 @@ import {getCityDetailById, getStateDetailById} from '@/services/api';
 import {queryWeather} from '@/services/weather';
 import Overview from './Overview';
 const noDevices = require('@/assets/images/logo_no_devices.png');
-const iconWifi = require('@/assets/images/ic_device_wifi.png');
-const iconWindow = require('@/assets/images/ic_window.png');
+const iconWifi = require('@/assets/images/keyboard.png');
+const iconWindow = require('@/assets/images/right.png');
 const iconWeatherSunny = require('@/assets/images/ic_weather_sunny.png');
 import {StaticDevices} from '@/data';
 
@@ -37,7 +37,7 @@ const HomeDevices = () => {
     <ScrollView>
       <Overview />
       <FlatList
-        pt={3}
+        p={4}
         flex={1}
         data={vm.devices.length ? vm.devices : StaticDevices}
         onRefresh={vm.onRefresh}
@@ -152,18 +152,23 @@ const DeviceItem = ({
   };
 
   return (
-    <Column mx={4} mt={3} bg={'white'}>
+    <Column>
       <TouchableOpacity onPress={onToggleDeviceExpanded} activeOpacity={1.0}>
-        <Row h={45} bg={'#3590D5'} alignItems={'center'} px={4}>
-          <Image source={iconWifi} mr={4} />
-          <Text color={'white'} flex={1} italic fontSize={'md'}>
+        <Row bg={'#FFFFFF'} alignItems={'center'} mt={2} p={2} borderRadius={8}>
+          <Image source={iconWifi} style={{height: 40, width: 40}} />
+          <Text
+            flex={1}
+            color={'#2B2B2B'}
+            fontSize={14}
+            fontWeight={500}
+            ml={4}>
             {item.name}
           </Text>
-          <Image source={iconWindow} />
+          <Image source={iconWindow} style={{height: 30, width: 30}} />
         </Row>
       </TouchableOpacity>
       {isExpanded && (
-        <Column px={5} mb={3}>
+        <Column px={5} bg={'white'} borderRadius={8} mt={1}>
           <Row alignItems={'center'} justifyContent={'space-between'} mt={4}>
             <Row alignItems={'center'} space={1}>
               {!!weather && (
