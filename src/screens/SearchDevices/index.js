@@ -13,6 +13,7 @@ import {useStore} from '@/hooks';
 import {sleep} from '@/utils';
 import {Screens} from '@/constants/Navigation';
 import {askLocationPermissionForBLEScan, checkBluetoothPermission} from '@/utils/bluetooth';
+import {StaticDevices} from '@/data';
 
 const BLEManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BLEManagerModule);
@@ -24,7 +25,13 @@ const SearchDevices = () => {
   const [bleStatus, setBLEStatus] = React.useState();
   const store = useStore();
   const toast = useToast();
-  const data = values(store.bleDevices).map(d => {
+  /* const data = values(store.bleDevices).map(d => {
+    return {
+      name: d.name,
+      id: d.id
+    };
+  }); */
+  const data = StaticDevices.map(d => {
     return {
       name: d.name,
       id: d.id
@@ -126,7 +133,7 @@ const SearchDevices = () => {
       ListHeaderComponent={(<Header isSearching={isSearching} devices={data} onPressedSearch={onSearch}/>)}
       ItemSeparatorComponent={Separator}
       renderItem={({item}) => (<Item item={item} onPress={() => onPressItem(item)}/>)}
-      data={data}
+      data={data.length ? data : staticDevices}
     />
   );
 };

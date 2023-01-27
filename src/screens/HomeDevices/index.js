@@ -11,7 +11,6 @@ import {
   ScrollView,
 } from 'native-base';
 import {observer} from 'mobx-react';
-
 import useViewModel from './methods';
 import ActionButton from '@/components/buttons/ActionButton';
 import {useNavigation} from '@react-navigation/native';
@@ -30,6 +29,7 @@ const noDevices = require('@/assets/images/logo_no_devices.png');
 const iconWifi = require('@/assets/images/ic_device_wifi.png');
 const iconWindow = require('@/assets/images/ic_window.png');
 const iconWeatherSunny = require('@/assets/images/ic_weather_sunny.png');
+import {StaticDevices} from '@/data';
 
 const HomeDevices = () => {
   const vm = useViewModel();
@@ -39,7 +39,7 @@ const HomeDevices = () => {
       <FlatList
         pt={3}
         flex={1}
-        data={vm.devices}
+        data={vm.devices.length ? vm.devices : StaticDevices}
         onRefresh={vm.onRefresh}
         refreshing={vm.isLoading}
         keyExtractor={item => item.id}
