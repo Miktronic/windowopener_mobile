@@ -39,7 +39,7 @@ const HomeDevices = () => {
       <FlatList
         p={4}
         flex={1}
-        data={vm.devices.length ? vm.devices : StaticDevices}
+        data={vm.devices}
         onRefresh={vm.onRefresh}
         refreshing={vm.isLoading}
         keyExtractor={item => item.id}

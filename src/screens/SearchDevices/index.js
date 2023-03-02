@@ -43,18 +43,18 @@ const SearchDevices = () => {
   const [bleStatus, setBLEStatus] = React.useState();
   const store = useStore();
   const toast = useToast();
-  /* const data = values(store.bleDevices).map(d => {
-    return {
-      name: d.name,
-      id: d.id
-    };
-  }); */
-  const data = StaticDevices.map(d => {
+  const data = values(store.bleDevices).map(d => {
     return {
       name: d.name,
       id: d.id,
     };
   });
+  // const data = StaticDevices.map(d => {
+  //   return {
+  //     name: d.name,
+  //     id: d.id,
+  //   };
+  // });
 
   const handleDiscoverPeripheral = peripheral => {
     console.log(peripheral);
@@ -180,7 +180,7 @@ const SearchDevices = () => {
       renderItem={({item}) => (
         <Item item={item} onPress={() => onPressItem(item)} />
       )}
-      data={data.length ? data : staticDevices}
+      data={data}
     />
   );
 };
