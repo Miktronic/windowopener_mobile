@@ -34,6 +34,7 @@ export default class Hud extends PureComponent {
     Animated.timing(this.state.opacityValue, {
       toValue: this.props.opacity,
       duration: this.props.fadeInDuration,
+      useNativeDriver: true,
     }).start();
 
     if (after !== null) {
@@ -50,6 +51,7 @@ export default class Hud extends PureComponent {
       Animated.timing(this.state.opacityValue, {
         toValue: 0.0,
         duration: this.props.fadeOutDuration,
+        useNativeDriver: true,
       }).start(() => {
         this.mount &&
           this.setState({

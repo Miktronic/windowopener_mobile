@@ -124,15 +124,14 @@ const DeviceItem = ({
   };
 
   const onOpenStatusChange = async newValue => {
-    setSliderValue(newValue);
-    if (!(await confirmAlert('Are you sure?'))) {
-      // switch back to old mode
-      return setSliderValue(newValue === 1 ? 0 : 1);
-    }
+    // if (!(await confirmAlert('Are you sure?'))) {
+    //   // switch back to old mode
+    //   return setSliderValue(newValue === 1 ? 0 : 1);
+    // }
     try {
       // call api
       store.hud.show();
-      await Api.setOpenStatus(item.id, newValue === 1);
+      await Api.setOpenStatus(item.id, sliderValue);
     } catch (ex) {
       const apiError = apiError2Message(ex);
       if (apiError) {
@@ -195,27 +194,28 @@ const DeviceItem = ({
               <Icon as={Feather} name={'settings'} size={'md'} mx={1} my={1} />
             </TouchableOpacity>
           </Row>
-          <Slider
+          {/* <Slider
             mt={5}
-            size={'md'}
+            size={'lg'}
             minValue={0}
-            maxValue={1}
+            maxValue={100}
             step={1}
-            defaultValue={item.status ? 1 : 0}
+            defaultValue={50}
             value={sliderValue}
-            onChangeEnd={onOpenStatusChange}>
+            onChange={value => setSliderValue(value)}>
             <Slider.Track>
               <Slider.FilledTrack />
             </Slider.Track>
             <Slider.Thumb />
-          </Slider>
+          </Slider> */}
+          <CustomSlider value={sliderValue} setValue={setSliderValue} />
           <Row justifyContent={'space-between'}>
             <Text italic ml={-3} color={'#8b8b8b'}>
               Close
             </Text>
-            <Text italic bold fontSize={'md'} mt={2}>
-              STATUS
-            </Text>
+            <Text color={'#8b8b8b'}>|</Text>
+            <Text color={'#8b8b8b'}>|</Text>
+            <Text color={'#8b8b8b'}>|</Text>
             <Text italic mr={-3} color={'#8b8b8b'}>
               Open
             </Text>
@@ -240,5 +240,26 @@ const EmptyItemsView = () => {
     </Column>
   );
 };
+
+const CustomSlider = React.memo(({value, setValue}) => {
+  return (
+    <Slider
+      mt={5}
+      size={'lg'}
+      minValue={0}
+      maxValue={100}
+      step={25}
+      defaultValue={50}
+      onChangeEnd={value => console.log(value)}
+      // value={sliderValue}
+      // onChange={value => setValue(value)}
+    >
+      <Slider.Track>
+        <Slider.FilledTrack />
+      </Slider.Track>
+      <Slider.Thumb />
+    </Slider>
+  );
+});
 
 export default observer(HomeDevices);
