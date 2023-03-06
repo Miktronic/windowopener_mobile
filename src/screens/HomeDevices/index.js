@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {
   Column,
   Text,
@@ -64,7 +64,8 @@ const DeviceItem = ({
   onToggleDeviceExpanded,
   onPressConfig,
 }) => {
-  const [sliderValue, setSliderValue] = React.useState(item.status ? 1 : 0);
+  const [sliderValue, setSliderValue] = React.useState(item.status ? 100 : 0);
+  const sliderPrevValue = useRef(null);
   const [autoMode, setAutoMode] = React.useState(item.autoMode);
   const [weather, setWeather] = React.useState();
   const store = useStore();
@@ -124,10 +125,11 @@ const DeviceItem = ({
   };
 
   const onOpenStatusChange = async newValue => {
-    // if (!(await confirmAlert('Are you sure?'))) {
-    //   // switch back to old mode
-    //   return setSliderValue(newValue === 1 ? 0 : 1);
-    // }
+    if (!(await confirmAlert('Are you sure?'))) {
+      // switch back to old mode
+      setSliderValue(sliderPrevValue.current);
+      return;
+    }
     try {
       // call api
       store.hud.show();
@@ -143,7 +145,7 @@ const DeviceItem = ({
         store.notification.showError(ex.message);
       }
       // in case of error, revert back the auto mode
-      return setSliderValue(newValue === 1 ? 0 : 1);
+      return setSliderValue(newValue);
     } finally {
       store.hud.hide();
     }
@@ -154,7 +156,7 @@ const DeviceItem = ({
     <Column>
       <TouchableOpacity onPress={onToggleDeviceExpanded} activeOpacity={1.0}>
         <Row bg={'#FFFFFF'} alignItems={'center'} mt={2} p={2} borderRadius={8}>
-          <Image source={iconWifi} style={{height: 40, width: 40}} />
+          <Image source={iconWifi} style={{height: 40, width: 40}} alt="logo" />
           <Text
             flex={1}
             color={'#2B2B2B'}
@@ -163,7 +165,11 @@ const DeviceItem = ({
             ml={4}>
             {item.name}
           </Text>
-          <Image source={iconWindow} style={{height: 30, width: 30}} />
+          <Image
+            source={iconWindow}
+            style={{height: 30, width: 30}}
+            alt="Icon"
+          />
         </Row>
       </TouchableOpacity>
       {isExpanded && (
@@ -172,7 +178,12 @@ const DeviceItem = ({
             <Row alignItems={'center'} space={1}>
               {!!weather && (
                 <>
-                  <Image source={{uri: weather.icon}} w={'23px'} h={'23px'} />
+                  <Image
+                    source={{uri: weather.icon}}
+                    w={'23px'}
+                    h={'23px'}
+                    alt="Weather Icon"
+                  />
                   <Text bold fontSize={13} mr={-1}>
                     {weather.temperature}
                   </Text>
@@ -208,7 +219,12 @@ const DeviceItem = ({
             </Slider.Track>
             <Slider.Thumb />
           </Slider> */}
-          <CustomSlider value={sliderValue} setValue={setSliderValue} />
+          <CustomSlider
+            value={sliderValue}
+            setValue={setSliderValue}
+            onOpenStatusChange={onOpenStatusChange}
+            sliderPrevValue={sliderPrevValue}
+          />
           <Row justifyContent={'space-between'}>
             <Text italic ml={-3} color={'#8b8b8b'}>
               Close
@@ -230,7 +246,7 @@ const EmptyItemsView = () => {
   const nav = useNavigation();
   return (
     <Column alignItems={'center'} justifyContent={'center'} my={5}>
-      <Image source={noDevices} />
+      <Image source={noDevices} alt="NO Devices" />
       <Text mt={3} italic color={'#8B8B88'} fontSize={21} textAlign={'center'}>
         {"It looks like your haven't\n added any device"}
       </Text>
@@ -241,25 +257,29 @@ const EmptyItemsView = () => {
   );
 };
 
-const CustomSlider = React.memo(({value, setValue}) => {
-  return (
-    <Slider
-      mt={5}
-      size={'lg'}
-      minValue={0}
-      maxValue={100}
-      step={25}
-      defaultValue={50}
-      onChangeEnd={value => console.log(value)}
-      // value={sliderValue}
-      // onChange={value => setValue(value)}
-    >
-      <Slider.Track>
-        <Slider.FilledTrack />
-      </Slider.Track>
-      <Slider.Thumb />
-    </Slider>
-  );
-});
+const CustomSlider = React.memo(
+  ({value, setValue, onOpenStatusChange, sliderPrevValue}) => {
+    return (
+      <Slider
+        mt={5}
+        size={'lg'}
+        minValue={0}
+        maxValue={100}
+        step={25}
+        defaultValue={50}
+        value={value}
+        onChange={v => {
+          sliderPrevValue.current = value;
+          setValue(v);
+        }}
+        onChangeEnd={value => onOpenStatusChange(value)}>
+        <Slider.Track>
+          <Slider.FilledTrack />
+        </Slider.Track>
+        <Slider.Thumb />
+      </Slider>
+    );
+  },
+);
 
 export default observer(HomeDevices);

@@ -17,9 +17,9 @@ function useViewModel() {
 
   const onRefresh = () => {
     loadDevices();
-  }
+  };
 
-  const toggleDeviceExpanded = (id) => {
+  const toggleDeviceExpanded = id => {
     if (devicesExpanded.includes(id)) {
       const idx = devicesExpanded.indexOf(id);
       devicesExpanded.splice(idx, 1);
@@ -27,26 +27,25 @@ function useViewModel() {
     } else {
       setDevicesExpanded([...devicesExpanded, id]);
     }
-  }
+  };
 
   const loadDevices = async () => {
     store.hud.show();
     setLoading(true);
     try {
       setDevices(await Api.getDevices());
-    }catch(ex){
+    } catch (ex) {
       const apiError = apiError2Message(ex);
       if (apiError) {
         store.notification.showError(apiError);
-      }else {
+      } else {
         store.notification.showError(ex.message);
       }
-    }
-    finally {
+    } finally {
       store.hud.hide();
     }
     setLoading(false);
-  }
+  };
 
   React.useEffect(() => {
     loadDevices().then().catch();
@@ -59,9 +58,9 @@ function useViewModel() {
     }
   }, [route.params]);
 
-  const onPressConfig = (device) => {
+  const onPressConfig = device => {
     navigation.navigate(Screens.editDevice, {device});
-  }
+  };
 
   return {
     store,
@@ -70,7 +69,7 @@ function useViewModel() {
     toggleDeviceExpanded,
     onPressConfig,
     isLoading,
-    onRefresh
+    onRefresh,
   };
 }
 
