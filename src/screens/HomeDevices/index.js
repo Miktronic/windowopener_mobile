@@ -66,6 +66,7 @@ const DeviceItem = ({
 }) => {
   const [sliderValue, setSliderValue] = React.useState(item.status ? 100 : 0);
   const sliderPrevValue = useRef(null);
+  const allowPrevValue = useRef(true);
   const [autoMode, setAutoMode] = React.useState(item.autoMode);
   const [weather, setWeather] = React.useState();
   const store = useStore();
@@ -144,12 +145,11 @@ const DeviceItem = ({
       } else {
         store.notification.showError(ex.message);
       }
-      // in case of error, revert back the auto mode
-      return setSliderValue(newValue);
     } finally {
       store.hud.hide();
+      setSliderValue(newValue);
+      allowPrevValue.current = true;
     }
-    setSliderValue(newValue);
   };
 
   return (
@@ -224,6 +224,7 @@ const DeviceItem = ({
             setValue={setSliderValue}
             onOpenStatusChange={onOpenStatusChange}
             sliderPrevValue={sliderPrevValue}
+            allowPrevValue={allowPrevValue}
           />
           <Row justifyContent={'space-between'}>
             <Text italic ml={-3} color={'#8b8b8b'}>
@@ -258,7 +259,7 @@ const EmptyItemsView = () => {
 };
 
 const CustomSlider = React.memo(
-  ({value, setValue, onOpenStatusChange, sliderPrevValue}) => {
+  ({value, setValue, onOpenStatusChange, sliderPrevValue, allowPrevValue}) => {
     return (
       <Slider
         mt={5}
@@ -269,7 +270,10 @@ const CustomSlider = React.memo(
         defaultValue={50}
         value={value}
         onChange={v => {
-          sliderPrevValue.current = value;
+          if (allowPrevValue.current) {
+            sliderPrevValue.current = value;
+            allowPrevValue.current = false;
+          }
           setValue(v);
         }}
         onChangeEnd={value => onOpenStatusChange(value)}>
