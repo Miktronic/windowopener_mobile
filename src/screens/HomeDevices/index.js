@@ -64,7 +64,7 @@ const DeviceItem = ({
   onToggleDeviceExpanded,
   onPressConfig,
 }) => {
-  const [sliderValue, setSliderValue] = React.useState(item.status ? 100 : 0);
+  const [sliderValue, setSliderValue] = React.useState(item.status);
   const sliderPrevValue = useRef(null);
   const allowPrevValue = useRef(true);
   const [autoMode, setAutoMode] = React.useState(item.autoMode);
@@ -135,6 +135,8 @@ const DeviceItem = ({
       // call api
       store.hud.show();
       await Api.setOpenStatus(item.id, sliderValue);
+      setSliderValue(newValue);
+      allowPrevValue.current = true;
     } catch (ex) {
       const apiError = apiError2Message(ex);
       if (apiError) {
@@ -145,10 +147,9 @@ const DeviceItem = ({
       } else {
         store.notification.showError(ex.message);
       }
+      setSliderValue(sliderPrevValue.current);
     } finally {
       store.hud.hide();
-      setSliderValue(newValue);
-      allowPrevValue.current = true;
     }
   };
 
