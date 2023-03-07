@@ -205,20 +205,6 @@ const DeviceItem = ({
               <Icon as={Feather} name={'settings'} size={'md'} mx={1} my={1} />
             </TouchableOpacity>
           </Row>
-          {/* <Slider
-            mt={5}
-            size={'lg'}
-            minValue={0}
-            maxValue={100}
-            step={1}
-            defaultValue={50}
-            value={sliderValue}
-            onChange={value => setSliderValue(value)}>
-            <Slider.Track>
-              <Slider.FilledTrack />
-            </Slider.Track>
-            <Slider.Thumb />
-          </Slider> */}
           <CustomSlider
             value={sliderValue}
             setValue={setSliderValue}
