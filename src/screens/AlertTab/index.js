@@ -6,27 +6,23 @@ import AlertHistory from '@/screens/AlertHistory';
 
 const Stack = createStackNavigator();
 
-const navHeaderBackImage = require('@/assets/images/navheader_left.png')
+const navHeaderBackImage = require('@/assets/images/navheader_left.png');
 
 const AlertTab = () => {
   return (
-    <Stack.Navigator
-      screenOptions={{
-
-      }}
-    >
+    <Stack.Navigator screenOptions={{}}>
       <Stack.Screen
         name={Screens.alertHistory}
         component={AlertHistory}
         options={{
-          title: 'Messages',
+          title: 'Event History',
           headerLeft: () => {
-            return <Image source={navHeaderBackImage} ml={4}/>
-          }
+            return <Image source={navHeaderBackImage} ml={4} />;
+          },
         }}
       />
     </Stack.Navigator>
   );
-}
+};
 
 export default AlertTab;
