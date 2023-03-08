@@ -8,7 +8,7 @@ const outside = require('@/assets/myImages/outside.png');
 const onboard = require('@/assets/myImages/onboard.png');
 import {useNavigation} from '@react-navigation/native';
 
-const Overview = () => {
+const Overview = ({tempData}) => {
   const nav = useNavigation();
   const onPressAdd = () => {
     nav.navigate(Screens.overview);
@@ -42,7 +42,11 @@ const Overview = () => {
         </Stack>
 
         <Stack direction="row" space={3}>
-          <Temp image={outside} digree="22° C" data="Outside temp" />
+          <Temp
+            image={outside}
+            digree={`${tempData?.outside_temperature}° F`}
+            data="Outside temp"
+          />
           <Temp image={onboard} digree="20° C" data="Onboard temp" />
         </Stack>
 

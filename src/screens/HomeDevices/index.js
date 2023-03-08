@@ -35,7 +35,7 @@ const HomeDevices = () => {
   const vm = useViewModel();
   return (
     <ScrollView>
-      <Overview />
+      <Overview tempData={vm.tempData} />
       <FlatList
         p={4}
         flex={1}

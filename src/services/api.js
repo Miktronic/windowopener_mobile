@@ -230,4 +230,8 @@ export async function getCityDetailById(id) {
   return instance.get(`/geo/city/${id}/latlng`).then(r => r.data?.data);
 }
 
+export async function getTemperature() {
+  return instance.get(`/temperature/3`).then(r => r.data?.data);
+}
+
 export {instance};
