@@ -16,35 +16,30 @@ import FormInput from '@/components/FormInput';
 import {apiError2Message} from '@/utils';
 import {useStore} from '@/hooks';
 import {useGeoHooks} from '@/hooks/geohooks';
-import { stringToBytes } from "convert-string";
+import {stringToBytes} from 'convert-string';
 import {connectPeripheral} from '@/utils/bluetooth';
 
-
 const yup = object().shape({
-  name: string().trim()
-    .required(errorMessage('name', 'Enter name')),
-  type: string().trim()
-    .required(errorMessage('type', 'Select device type')),
-  country: object().shape({
-    id: string().required(),
-    name: string().required()
-  })
+  name: string().trim().required(errorMessage('name', 'Enter name')),
+  type: string().trim().required(errorMessage('type', 'Select device type')),
+  country: object()
+    .shape({
+      id: string().required(),
+      name: string().required(),
+    })
     .required(errorMessage('country', 'Select Country')),
-  state: object().shape({
-    id: string().required(),
-    name: string().required()
-  })
+  state: object()
+    .shape({
+      id: string().required(),
+      name: string().required(),
+    })
     .required(errorMessage('country', 'Select State')),
   city: object().shape({
     id: string(),
-    name: string()
+    name: string(),
   }),
-  lowTemp: number()
-    .required(errorMessage('temperature', 'Enter temperature range')),
-  highTemp: number()
-    .required(errorMessage('temperature', 'Enter temperature range')),
   ssid: string().required(errorMessage('ssid', 'Set WIFI SSID name')),
-  password: string().required(errorMessage('password', 'Set WIFI password'))
+  password: string().required(errorMessage('password', 'Set WIFI password')),
 });
 
 const AddDevice = () => {
@@ -57,9 +52,6 @@ const AddDevice = () => {
   const {countries, states, cities} = useGeoHooks(country, state);
   const [ssid, setSSID] = useState();
   const [password, setPassword] = useState();
-  const [autoMode, setAutoMode] = useState(false);
-  const [lowTemp, setLowTemp] = useState();
-  const [highTemp, setHighTemp] = useState();
   const [errors, setErrors] = useState({});
   const nav = useNavigation();
 
@@ -76,9 +68,6 @@ const AddDevice = () => {
         type: 'opener',
         country,
         state,
-        autoMode,
-        lowTemp: lowTemp,
-        highTemp: highTemp,
       };
       if (city?.id) {
         values.city = city;
@@ -88,48 +77,50 @@ const AddDevice = () => {
         const data = {
           ssid,
           pass: password,
-          auto: autoMode,
-          low_temp:parseFloat(lowTemp),
-          high_temp:parseFloat(highTemp),
         };
         const jsonData = JSON.stringify(data);
         const encodedData = stringToBytes(jsonData);
 
         await connectPeripheral(peripheral.id);
-        await BLEManager.retrieveServices(peripheral.id, [config.ble.serviceUUID]);
-        await BLEManager.startNotification(peripheral.id, config.ble.serviceUUID, config.ble.characteristicUUID)
+        await BLEManager.retrieveServices(peripheral.id, [
+          config.ble.serviceUUID,
+        ]);
+        await BLEManager.startNotification(
+          peripheral.id,
+          config.ble.serviceUUID,
+          config.ble.characteristicUUID,
+        );
         await BLEManager.write(
           peripheral.id,
           config.ble.serviceUUID,
           config.ble.characteristicUUID,
           encodedData,
-          encodedData.length
+          encodedData.length,
         );
-      }catch(ex){
+      } catch (ex) {
         console.log(ex);
         throw new Error('Error while commuicating with device');
       }
 
       await Api.addDevice(values);
       // back to home scree
-      nav.navigate(Screens.homeDevices,
-        {
-          refreshDevices: true
-        });
+      nav.navigate(Screens.homeDevices, {
+        refreshDevices: true,
+      });
 
       // Try to disconnect the device
       try {
-        console.log("Trying to disconnect device");
+        console.log('Trying to disconnect device');
         await BLEManager.disconnect(peripheral.id, true);
-      }catch(ex){}
+      } catch (ex) {}
 
       store.notification.showSuccess('Device Added');
     } catch (ex) {
+      console.log(ex.response.data);
       const apiError = apiError2Message(ex);
       if (apiError) {
         store.notification.showError(apiError);
-      }
-      else if (ex.errors) {
+      } else if (ex.errors) {
         const _errors = assignIn({}, ...ex.errors);
         return setErrors(_errors);
       } else {
@@ -183,10 +174,10 @@ const AddDevice = () => {
           <FormControl.Label>Country</FormControl.Label>
           <ModalSelector
             data={countries}
-            keyExtractor= {item => item.id}
-            labelExtractor= {item => `${item.emoji} ${item.name}`}
+            keyExtractor={item => item.id}
+            labelExtractor={item => `${item.emoji} ${item.name}`}
             animationType={'fade'}
-            onChange={(option) => {
+            onChange={option => {
               // when country changed, clear out state and city
               if (country?.id !== option.id) {
                 setState();
@@ -194,9 +185,8 @@ const AddDevice = () => {
               }
               setCountry(option);
             }}
-            cancelText={'Cancel'}
-          >
-            <FormInput editable={false} value={country?.name ?? ''}/>
+            cancelText={'Cancel'}>
+            <FormInput editable={false} value={country?.name ?? ''} />
           </ModalSelector>
           <FormControl.ErrorMessage>{errors.country}</FormControl.ErrorMessage>
         </FormControl>
@@ -205,18 +195,17 @@ const AddDevice = () => {
           <ModalSelector
             data={states}
             animationType={'fade'}
-            keyExtractor= {item => item.id}
-            labelExtractor= {item => item.name}
-            onChange={(option) => {
+            keyExtractor={item => item.id}
+            labelExtractor={item => item.name}
+            onChange={option => {
               // when state changed, clear out city
               if (state?.id !== option.id) {
                 setCity();
               }
               setState(option);
             }}
-            cancelText={'Cancel'}
-          >
-            <FormInput editable={false} value={state?.name ?? ''}/>
+            cancelText={'Cancel'}>
+            <FormInput editable={false} value={state?.name ?? ''} />
           </ModalSelector>
           <FormControl.ErrorMessage>{errors.state}</FormControl.ErrorMessage>
         </FormControl>
@@ -224,42 +213,20 @@ const AddDevice = () => {
           <FormControl.Label>City</FormControl.Label>
           <ModalSelector
             data={cities}
-            keyExtractor= {item => item.id}
-            labelExtractor= {item => item.name}
+            keyExtractor={item => item.id}
+            labelExtractor={item => item.name}
             animationType={'fade'}
-            onChange={(option) => {
+            onChange={option => {
               setCity(option);
             }}
-            cancelText={'Cancel'}
-          >
-            <FormInput editable={false} value={city?.name ?? ''}/>
+            cancelText={'Cancel'}>
+            <FormInput editable={false} value={city?.name ?? ''} />
           </ModalSelector>
           <FormControl.ErrorMessage>{errors.city}</FormControl.ErrorMessage>
         </FormControl>
-        <Row alignItems={'center'} justifyContent={'space-between'} mt={2}>
-          <FormControl.Label>Auto Mode</FormControl.Label>
-          <Switch value={autoMode} onValueChange={setAutoMode}/>
-        </Row>
-        <FormControl mt={3} isInvalid={!!errors.temperature}>
-          <FormControl.Label>Temperature Range</FormControl.Label>
-          <Row space={3} alignItems={'center'}>
-            <FormInput
-              flex={1}
-              value={lowTemp}
-              onChangeText={setLowTemp}
-              keyboardType={'numeric'}
-            />
-            <View height={'1px'} bg={'#8b8b8b'} width={4}/>
-            <FormInput
-              flex={1}
-              value={highTemp}
-              onChangeText={setHighTemp}
-              keyboardType={'numeric'}
-            />
-          </Row>
-          <FormControl.ErrorMessage>{errors.temperature}</FormControl.ErrorMessage>
-        </FormControl>
-        <ActionButton mt={5} onPress={onPressAdd}>Add</ActionButton>
+        <ActionButton mt={5} onPress={onPressAdd}>
+          Add
+        </ActionButton>
       </KeyboardAwareScrollView>
     </Column>
   );

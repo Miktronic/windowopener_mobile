@@ -69,19 +69,6 @@ const OverViewSettings = () => {
             </FormControl.ErrorMessage>
           </FormControl>
           <FormControl isInvalid={!!vm.errors.password}>
-            <TitledPlainSelect
-              mt={vs(10)}
-              title={'Device List'}
-              inputProps={{
-                // secureTextEntry: true,
-                placeholder: 'Select Device',
-                // value: vm.password,
-                // onChangeText: vm.setPassword,
-              }}>
-              <Select.Item label="Select Device" value="" />
-              <Select.Item label="Device 1" value="1" />
-              <Select.Item label="Device 2" value="2" />
-            </TitledPlainSelect>
             <FormControl.ErrorMessage>
               {vm.errors.password}
             </FormControl.ErrorMessage>

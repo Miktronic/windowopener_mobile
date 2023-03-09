@@ -102,23 +102,18 @@ export async function addDevice(values) {
       country: values.country,
       state: values.state,
       city: values.city,
-      is_auto: values.autoMode ? 'Yes' : 'No',
-      low_temperature: values.lowTemp,
-      high_temperature: values.highTemp,
-      status: 'Close',
+      status: 0,
     })
     .then(r => r.data?.data);
 }
 
 export async function updateDevice(id, values) {
+  console.log(values);
   return instance.put(`/device/${id}`, {
     alias: values.name,
     country: values.country,
-    state: values.state,
-    city: values.city,
-    is_auto: values.autoMode ? 'Yes' : 'No',
-    low_temperature: values.lowTemp,
-    high_temperature: values.highTemp,
+    state: values.state.id,
+    city: values.city.id,
   });
 }
 
@@ -131,9 +126,10 @@ export async function setAutoMode(id, value) {
 }
 
 export async function setOpenStatus(id, status) {
+  console.log(status);
   return instance
-    .post(`/device/${id}/setOpenStatus`, {
-      value: status,
+    .put(`/device/${id}`, {
+      status,
     })
     .then(r => r.data?.data);
 }
@@ -230,8 +226,8 @@ export async function getCityDetailById(id) {
   return instance.get(`/geo/city/${id}/latlng`).then(r => r.data?.data);
 }
 
-export async function getTemperature() {
-  return instance.get(`/temperature/3`).then(r => r.data?.data);
+export async function getSettings() {
+  return instance.get(`/settings`).then(r => r.data?.data);
 }
 
 export {instance};

@@ -29,58 +29,38 @@ function useViewModel() {
   const [password, setPassword] = React.useState();
   const [errors, setErrors] = React.useState({});
 
-  console.log(store);
+  // const onPressLogin = async () => {
+  //   setErrors({});
+  //   try {
+  //     const values = yup.validateSync({email, password}, {abortEarly: false});
+  //     store.hud.show();
+  //     const {access_token, token_type} = await Api.logIn(values);
 
-  React.useEffect(() => {
-    const email = route.params?.email;
-    if (email) {
-      setEmail(email);
-    }
-  }, [route.params]);
+  //     store.notification.showSuccess('Login success');
+  //     store.user.logIn(email, access_token);
 
-  const onPressLogin = async () => {
-    setErrors({});
-    try {
-      const values = yup.validateSync({email, password}, {abortEarly: false});
-      store.hud.show();
-      const {access_token, token_type} = await Api.logIn(values);
-
-      store.notification.showSuccess('Login success');
-      store.user.logIn(email, access_token);
-
-      // on successful sign up, go to login
-      resetWithScreen(navigation, Screens.mainTabs);
-    } catch (ex) {
-      const apiError = apiError2Message(ex);
-      if (apiError) {
-        store.notification.showError(apiError);
-      } else if (ex.errors) {
-        const _errors = assignIn({}, ...ex.errors);
-        setErrors(_errors);
-      } else {
-        //Toast.show({title: 'Signup Failed', status: 'error'});
-        store.notification.showError(ex.message);
-      }
-    } finally {
-      store.hud.hide();
-    }
-    //resetWithScreen(navigation, Screens.mainTabs);
-  };
-
-  const onPressSignUp = () => {
-    navigation.navigate(Screens.signUp);
-  };
-
-  const onPressForgetPassword = () => {
-    navigation.navigate(Screens.forgetPassword);
-  };
+  //     // on successful sign up, go to login
+  //     resetWithScreen(navigation, Screens.mainTabs);
+  //   } catch (ex) {
+  //     const apiError = apiError2Message(ex);
+  //     if (apiError) {
+  //       store.notification.showError(apiError);
+  //     } else if (ex.errors) {
+  //       const _errors = assignIn({}, ...ex.errors);
+  //       setErrors(_errors);
+  //     } else {
+  //       //Toast.show({title: 'Signup Failed', status: 'error'});
+  //       store.notification.showError(ex.message);
+  //     }
+  //   } finally {
+  //     store.hud.hide();
+  //   }
+  //   //resetWithScreen(navigation, Screens.mainTabs);
+  // };
 
   return {
     store,
     errors,
-    onPressLogin,
-    onPressSignUp,
-    onPressForgetPassword,
     email,
     setEmail,
     password,

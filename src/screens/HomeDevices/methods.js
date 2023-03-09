@@ -14,7 +14,7 @@ function useViewModel() {
   const [devices, setDevices] = React.useState([]);
   const [devicesExpanded, setDevicesExpanded] = React.useState([]);
   const [isLoading, setLoading] = React.useState(false);
-  const [tempData, setTempData] = React.useState(null);
+  const [settingsData, setSettingsData] = React.useState(null);
 
   const onRefresh = () => {
     loadDevices();
@@ -48,14 +48,15 @@ function useViewModel() {
     setLoading(false);
   };
 
-  const loadTemperature = async () => {
+  const loadSettings = async () => {
     store.hud.show();
     setLoading(true);
     try {
-      const data = await Api.getTemperature();
-      setTempData(data);
+      const data = await Api.getSettings();
+      console.log(data);
+      setSettingsData(data);
     } catch (ex) {
-      console.log(ex);
+      console.log(ex.response.data);
       const apiError = apiError2Message(ex);
       if (apiError) {
         store.notification.showError(apiError);
@@ -70,7 +71,7 @@ function useViewModel() {
 
   React.useEffect(() => {
     loadDevices().then().catch();
-    loadTemperature().then().catch();
+    loadSettings().then().catch();
   }, []);
 
   // when new device is added
@@ -92,7 +93,7 @@ function useViewModel() {
     onPressConfig,
     isLoading,
     onRefresh,
-    tempData,
+    settingsData,
   };
 }
 
