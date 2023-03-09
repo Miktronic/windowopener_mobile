@@ -23,6 +23,7 @@ import * as Api from '@/services/api';
 import {confirmAlert} from '@/utils/alert';
 import {apiError2Message} from '@/utils';
 import {errorMessage} from '@/utils/Yup';
+import {useStore} from '@/hooks';
 
 const smallLogo = require('@/assets/images/logo-small.png');
 const logoTitle = require('@/assets/images/logo-title.png');
@@ -30,10 +31,10 @@ const logoTitle = require('@/assets/images/logo-title.png');
 const OverViewSettings = () => {
   const vm = useViewModel();
   const route = useRoute();
+
   const devices = route.params?.devices;
   useEffect(() => {
     const settingsData = route.params?.settingsData;
-    console.log(settingsData.low_temperature);
     vm.setLowTemp(settingsData.low_temperature);
     vm.setHighTemp(settingsData.high_temperature);
   }, [route.params]);
@@ -101,6 +102,7 @@ const OverViewSettings = () => {
 };
 
 const DeviceItem = ({device}) => {
+  const store = useStore();
   const [includeTemp, setIncludeTemp] = useState(device.is_temp_include == 1);
   return (
     <Column p={5} bg={'white'} borderRadius={8} mt={1}>
@@ -118,6 +120,7 @@ const DeviceItem = ({device}) => {
             if (!(await confirmAlert('Are you sure?'))) {
               return;
             }
+            store.hud.show();
             try {
               const {data} = await Api.updateSingleDevice(device.id, {
                 is_temp_include: includeTemp ? 0 : 1,
@@ -127,6 +130,8 @@ const DeviceItem = ({device}) => {
             } catch (ex) {
               const apiError = apiError2Message(ex);
               store.notification.showError(apiError);
+            } finally {
+              store.hud.hide();
             }
           }}
         />
