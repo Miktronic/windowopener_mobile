@@ -5,6 +5,7 @@ import {useStore} from '@/hooks';
 import {Screens} from '@/constants/Navigation';
 import * as Api from '@/services/api';
 import {apiError2Message} from '@/utils';
+import {confirmAlert} from '@/utils/alert';
 
 function useViewModel() {
   const navigation = useNavigation();
@@ -13,6 +14,7 @@ function useViewModel() {
 
   const [devices, setDevices] = React.useState([]);
   const [devicesExpanded, setDevicesExpanded] = React.useState([]);
+  const [autoMode, setAutoMode] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
   const [settingsData, setSettingsData] = React.useState(null);
 
@@ -55,6 +57,33 @@ function useViewModel() {
       const data = await Api.getSettings();
       console.log(data);
       setSettingsData(data);
+      setAutoMode(data.is_auto == 1 ? true : false);
+    } catch (ex) {
+      console.log(ex.response.data);
+      const apiError = apiError2Message(ex);
+      if (apiError) {
+        store.notification.showError(apiError);
+      } else {
+        store.notification.showError(ex.message);
+      }
+    } finally {
+      store.hud.hide();
+    }
+    setLoading(false);
+  };
+
+  const toggleAutoMode = async value => {
+    if (!(await confirmAlert('Are you sure?'))) {
+      return;
+    }
+    store.hud.show();
+    setLoading(true);
+    try {
+      const data = await Api.updateSettings({
+        is_auto: autoMode ? 0 : 1,
+      });
+      setSettingsData(data);
+      setAutoMode(data.is_auto == 1 ? true : false);
     } catch (ex) {
       console.log(ex.response.data);
       const apiError = apiError2Message(ex);
@@ -89,8 +118,11 @@ function useViewModel() {
     store,
     devices,
     devicesExpanded,
+    autoMode,
+    setAutoMode,
     toggleDeviceExpanded,
     onPressConfig,
+    toggleAutoMode,
     isLoading,
     onRefresh,
     settingsData,

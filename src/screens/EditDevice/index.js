@@ -93,6 +93,7 @@ const EditDevice = () => {
         values.city = city;
       }
       values = await yup.validate(values, {abortEarly: false});
+
       await Api.updateDevice(device.id, values);
 
       // back to home scree

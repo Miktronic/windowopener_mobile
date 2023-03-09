@@ -3,13 +3,17 @@ import {Box, Switch, Image, Text, Stack, Icon} from 'native-base';
 import Feather from 'react-native-vector-icons/Feather';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {Screens} from '@/constants/Navigation';
+import useViewModel from './methods';
+import {confirmAlert} from '@/utils/alert';
 
 const outside = require('@/assets/myImages/outside.png');
 const onboard = require('@/assets/myImages/onboard.png');
 import {useNavigation} from '@react-navigation/native';
+import {setAutoMode} from '@/services/api';
 
 const Overview = ({settingsData}) => {
   const nav = useNavigation();
+  const vm = useViewModel();
   const onPressAdd = () => {
     nav.navigate(Screens.overview);
   };
@@ -47,14 +51,22 @@ const Overview = ({settingsData}) => {
             digree={`${settingsData?.outside_temperature}° F`}
             data="Outside temp"
           />
-          <Temp image={onboard} digree="20° C" data="Onboard temp" />
+          <Temp
+            image={onboard}
+            digree={`${settingsData?.inside_temperature}° F`}
+            data="Onboard temp"
+          />
         </Stack>
 
         <Stack direction="row" justifyContent="space-between">
           <Text fontSize="16" fontWeight="500">
             “Auto mode” switch to control
           </Text>
-          <Switch color="#0F47AF" />
+          <Switch
+            color="#0F47AF"
+            value={vm.autoMode}
+            onToggle={vm.toggleAutoMode}
+          />
         </Stack>
       </Stack>
     </Box>

@@ -64,6 +64,7 @@ const DeviceItem = ({
   onToggleDeviceExpanded,
   onPressConfig,
 }) => {
+  console.log(item);
   const [sliderValue, setSliderValue] = React.useState(item.status);
   const sliderPrevValue = useRef(null);
   const allowPrevValue = useRef(true);
@@ -93,37 +94,7 @@ const DeviceItem = ({
       });
     }
     updateWeather().then().catch(setWeather());
-    setSliderValue(item.status ? 1 : 0);
-    setAutoMode(item.autoMode);
   }, [item]);
-
-  const onAutoSwitchChange = async newValue => {
-    setAutoMode(newValue);
-    if (!(await confirmAlert('Are you sure you want to switch'))) {
-      // switch back to old mode
-      return setAutoMode(!newValue);
-    }
-    try {
-      // call api
-      store.hud.show();
-      await Api.setAutoMode(item.id, newValue);
-    } catch (ex) {
-      const apiError = apiError2Message(ex);
-      if (apiError) {
-        store.notification.showError(apiError);
-      } else if (ex.errors) {
-        const _errors = assignIn({}, ...ex.errors);
-        setErrors(_errors);
-      } else {
-        store.notification.showError(ex.message);
-      }
-      // in case of error, revert back the auto mode
-      return setAutoMode(!newValue);
-    } finally {
-      store.hud.hide();
-    }
-    setAutoMode(newValue);
-  };
 
   const onOpenStatusChange = async newValue => {
     if (!(await confirmAlert('Are you sure?'))) {
@@ -193,14 +164,6 @@ const DeviceItem = ({
                   </Text>
                 </>
               )}
-            </Row>
-            <Row alignItems={'center'} mr={4} space={1}>
-              <Text italic>AUTO</Text>
-              <Switch
-                defaultIsChecked={item.autoMode}
-                onValueChange={onAutoSwitchChange}
-                value={autoMode}
-              />
             </Row>
             <TouchableOpacity onPress={onPressConfig}>
               <Icon as={Feather} name={'settings'} size={'md'} mx={1} my={1} />

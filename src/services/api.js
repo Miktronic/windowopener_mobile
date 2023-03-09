@@ -111,9 +111,9 @@ export async function updateDevice(id, values) {
   console.log(values);
   return instance.put(`/device/${id}`, {
     alias: values.name,
-    country: values.country,
-    state: values.state.id,
-    city: values.city.id,
+    country_id: values?.country?.id,
+    state_id: values?.state?.id,
+    city_id: values?.city?.id,
   });
 }
 
@@ -144,10 +144,7 @@ export async function getDevices() {
       country: d.country,
       state: d.state,
       city: d.city,
-      autoMode: d.is_auto === 'Yes',
-      lowTemp: d.low_temperature,
-      highTemp: d.high_temperature,
-      status: d.status === 'Open',
+      status: d.status,
     }));
   });
 }
@@ -228,6 +225,10 @@ export async function getCityDetailById(id) {
 
 export async function getSettings() {
   return instance.get(`/settings`).then(r => r.data?.data);
+}
+
+export async function updateSettings(data) {
+  return instance.put(`/settings`, data).then(r => r.data?.data);
 }
 
 export {instance};
