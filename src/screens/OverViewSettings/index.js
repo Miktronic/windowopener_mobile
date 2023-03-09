@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Column,
   Text,
@@ -18,26 +18,39 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import TitledInput from '@/components/TitledInput';
 import ActionButton from '@/components/buttons/ActionButton';
 import {TitledPlainInput, TitledPlainSelect} from '@/components/Inputs';
+import {useRoute} from '@react-navigation/native';
+import * as Api from '@/services/api';
+import {confirmAlert} from '@/utils/alert';
+import {apiError2Message} from '@/utils';
+import {errorMessage} from '@/utils/Yup';
 
 const smallLogo = require('@/assets/images/logo-small.png');
 const logoTitle = require('@/assets/images/logo-title.png');
 
 const OverViewSettings = () => {
   const vm = useViewModel();
+  const route = useRoute();
+  const devices = route.params?.devices;
+  useEffect(() => {
+    const settingsData = route.params?.settingsData;
+    console.log(settingsData.low_temperature);
+    vm.setLowTemp(settingsData.low_temperature);
+    vm.setHighTemp(settingsData.high_temperature);
+  }, [route.params]);
   return (
     <SafeAreaView flex={1}>
       <KeyboardAwareScrollView style={{flex: 1}}>
         <Column flex={1} px={4}>
-          <FormControl isInvalid={!!vm.errors.email}>
+          <FormControl isInvalid={!!vm.errors.lowTemp}>
             <HStack space={4}>
               <TitledPlainInput
                 width="48%"
                 mt={vs(10)}
                 title={'Temp Range'}
                 inputProps={{
-                  // value: vm.email,
-                  // onChangeText: vm.setEmail,
-                  // keyboardType: 'email-address',
+                  value: String(vm.lowTemp),
+                  onChangeText: vm.setLowTemp,
+                  keyboardType: 'numeric',
                   placeholder: 'Minimum Temp',
                   // _input: {
                   //   autoCapitalize: 'none',
@@ -52,9 +65,9 @@ const OverViewSettings = () => {
                 type="select"
                 // title={'Email address'}
                 inputProps={{
-                  // value: vm.email,
-                  // onChangeText: vm.setEmail,
-                  // keyboardType: 'email-address',
+                  value: String(vm.highTemp),
+                  onChangeText: vm.setHighTemp,
+                  keyboardType: 'numeric',
                   placeholder: 'Maximum Temp',
                   // _input: {
                   //   autoCapitalize: 'none',
@@ -65,31 +78,61 @@ const OverViewSettings = () => {
               />
             </HStack>
             <FormControl.ErrorMessage>
-              {vm.errors.email}
+              {vm.errors.lowTemp}
             </FormControl.ErrorMessage>
           </FormControl>
-          <FormControl isInvalid={!!vm.errors.password}>
+          <FormControl isInvalid={!!vm.errors.highTemp}>
             <FormControl.ErrorMessage>
-              {vm.errors.password}
+              {vm.errors.highTemp}
             </FormControl.ErrorMessage>
           </FormControl>
           <Stack space={3} my="5">
-            <Stack direction="row" justifyContent="space-between">
-              <Text fontSize="14" fontWeight="500" color="#2B2B2B">
-                Include temperature in automation
-              </Text>
-              <Switch color="#0F47AF" />
-            </Stack>
-            <Stack direction="row" justifyContent="space-between">
-              <Text fontSize="14" fontWeight="500" color="#2B2B2B">
-                Include humidity in automation include
-              </Text>
-              <Switch color="#0F47AF" />
-            </Stack>
+            {devices?.map((device, idx) => (
+              <DeviceItem key={idx} device={device} />
+            ))}
           </Stack>
+          <ActionButton mt={5} onPress={vm.onPressSave}>
+            Save
+          </ActionButton>
         </Column>
       </KeyboardAwareScrollView>
     </SafeAreaView>
+  );
+};
+
+const DeviceItem = ({device}) => {
+  console.log(device);
+  const [includeTemp, setIncludeTemp] = useState(device.is_temp_include == 1);
+  return (
+    <Column p={5} bg={'white'} borderRadius={8} mt={1}>
+      <Stack direction="row" justifyContent="space-between" style={{}}>
+        <Text fontSize="14" fontWeight="500" color="#2B2B2B">
+          {device.name}
+        </Text>
+        <Text fontSize="14" fontWeight="500" color="#2B2B2B">
+          Include temperature
+        </Text>
+        <Switch
+          color="#0F47AF"
+          value={includeTemp}
+          onToggle={async () => {
+            if (!(await confirmAlert('Are you sure?'))) {
+              return;
+            }
+            try {
+              const {data} = await Api.updateSingleDevice(device.id, {
+                is_temp_include: includeTemp ? 0 : 1,
+              });
+              console.log(data);
+              setIncludeTemp(data.is_temp_include == 1);
+            } catch (ex) {
+              const apiError = apiError2Message(ex);
+              store.notification.showError(apiError);
+            }
+          }}
+        />
+      </Stack>
+    </Column>
   );
 };
 

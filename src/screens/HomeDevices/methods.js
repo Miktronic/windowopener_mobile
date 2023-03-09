@@ -107,6 +107,7 @@ function useViewModel() {
   React.useEffect(() => {
     if (route.params?.refreshDevices) {
       loadDevices().then().catch();
+      loadSettings().then().catch();
     }
   }, [route.params]);
 

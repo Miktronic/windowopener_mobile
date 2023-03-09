@@ -11,11 +11,14 @@ const onboard = require('@/assets/myImages/onboard.png');
 import {useNavigation} from '@react-navigation/native';
 import {setAutoMode} from '@/services/api';
 
-const Overview = ({settingsData}) => {
+const Overview = ({settingsData, devices}) => {
   const nav = useNavigation();
   const vm = useViewModel();
   const onPressAdd = () => {
-    nav.navigate(Screens.overview);
+    nav.navigate(Screens.overview, {
+      settingsData,
+      devices,
+    });
   };
   return (
     <Box

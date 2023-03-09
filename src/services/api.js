@@ -116,6 +116,9 @@ export async function updateDevice(id, values) {
     city_id: values?.city?.id,
   });
 }
+export async function updateSingleDevice(id, values) {
+  return instance.put(`/device/${id}`, values);
+}
 
 export async function setAutoMode(id, value) {
   return instance
@@ -145,6 +148,8 @@ export async function getDevices() {
       state: d.state,
       city: d.city,
       status: d.status,
+      is_temp_include: d.is_temp_include,
+      is_hum_include: d.is_hum_include,
     }));
   });
 }
