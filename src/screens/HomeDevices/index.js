@@ -64,37 +64,10 @@ const DeviceItem = ({
   onToggleDeviceExpanded,
   onPressConfig,
 }) => {
-  console.log(item);
   const [sliderValue, setSliderValue] = React.useState(item.status);
   const sliderPrevValue = useRef(null);
   const allowPrevValue = useRef(true);
-  const [autoMode, setAutoMode] = React.useState(item.autoMode);
-  const [weather, setWeather] = React.useState();
   const store = useStore();
-
-  React.useEffect(() => {
-    async function updateWeather() {
-      let r;
-      if (item.city) {
-        r = await getCityDetailById(item.city.id);
-      } else {
-        r = await getStateDetailById(item.state.id);
-      }
-      const {latitude: lat, longitude: lng} = r;
-      const result = await queryWeather({lat, lng});
-      const {
-        current: {
-          temp_f,
-          condition: {icon},
-        },
-      } = result;
-      setWeather({
-        temperature: temp_f,
-        icon: `https:${icon}`,
-      });
-    }
-    updateWeather().then().catch(setWeather());
-  }, [item]);
 
   const onOpenStatusChange = async newValue => {
     if (!(await confirmAlert('Are you sure?'))) {
@@ -146,25 +119,7 @@ const DeviceItem = ({
       </TouchableOpacity>
       {isExpanded && (
         <Column px={5} bg={'white'} borderRadius={8} mt={1}>
-          <Row alignItems={'center'} justifyContent={'space-between'} mt={4}>
-            <Row alignItems={'center'} space={1}>
-              {!!weather && (
-                <>
-                  <Image
-                    source={{uri: weather.icon}}
-                    w={'23px'}
-                    h={'23px'}
-                    alt="Weather Icon"
-                  />
-                  <Text bold fontSize={13} mr={-1}>
-                    {weather.temperature}
-                  </Text>
-                  <Text fontSize={11} mt={-1}>
-                    ℉
-                  </Text>
-                </>
-              )}
-            </Row>
+          <Row alignItems={'center'} justifyContent={'flex-end'} mt={4}>
             <TouchableOpacity onPress={onPressConfig}>
               <Icon as={Feather} name={'settings'} size={'md'} mx={1} my={1} />
             </TouchableOpacity>

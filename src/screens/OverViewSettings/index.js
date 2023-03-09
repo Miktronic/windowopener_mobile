@@ -101,7 +101,6 @@ const OverViewSettings = () => {
 };
 
 const DeviceItem = ({device}) => {
-  console.log(device);
   const [includeTemp, setIncludeTemp] = useState(device.is_temp_include == 1);
   return (
     <Column p={5} bg={'white'} borderRadius={8} mt={1}>

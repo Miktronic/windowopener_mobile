@@ -108,7 +108,6 @@ export async function addDevice(values) {
 }
 
 export async function updateDevice(id, values) {
-  console.log(values);
   return instance.put(`/device/${id}`, {
     alias: values.name,
     country_id: values?.country?.id,
@@ -129,7 +128,6 @@ export async function setAutoMode(id, value) {
 }
 
 export async function setOpenStatus(id, status) {
-  console.log(status);
   return instance
     .put(`/device/${id}`, {
       status,
