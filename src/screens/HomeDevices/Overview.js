@@ -51,12 +51,20 @@ const Overview = ({settingsData, devices}) => {
         <Stack direction="row" space={3}>
           <Temp
             image={outside}
-            digree={`${settingsData?.outside_temperature}° F`}
+            digree={`${
+              settingsData?.outside_temperature
+                ? settingsData?.outside_temperature
+                : ''
+            }° F`}
             data="Outside temp"
           />
           <Temp
             image={onboard}
-            digree={`${settingsData?.inside_temperature}° F`}
+            digree={`${
+              settingsData?.inside_temperature
+                ? settingsData?.inside_temperature
+                : ''
+            }° F`}
             data="Onboard temp"
           />
         </Stack>

@@ -20,6 +20,7 @@ function useViewModel() {
 
   const onRefresh = () => {
     loadDevices();
+    loadSettings();
   };
 
   const toggleDeviceExpanded = id => {
