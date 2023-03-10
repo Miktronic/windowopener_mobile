@@ -5,9 +5,9 @@ import {useStore} from '@/hooks';
 import {resetWithScreen} from '@/services/navigation';
 import {Screens} from '@/constants/Navigation';
 import * as Api from '@/services/api';
-import {apiError2Message} from '@/utils';
 import {assignIn} from 'lodash';
 import {number, object, string} from 'yup';
+import {apiError2Message} from '@/utils';
 import {errorMessage} from '@/utils/Yup';
 
 const yup = object().shape({

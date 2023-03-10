@@ -135,9 +135,13 @@ const DeviceItem = ({
             <Text italic ml={-3} color={'#8b8b8b'}>
               Close
             </Text>
+            <Text mr={5} color={'#8b8b8b'}>
+              |
+            </Text>
             <Text color={'#8b8b8b'}>|</Text>
-            <Text color={'#8b8b8b'}>|</Text>
-            <Text color={'#8b8b8b'}>|</Text>
+            <Text ml={5} color={'#8b8b8b'}>
+              |
+            </Text>
             <Text italic mr={-3} color={'#8b8b8b'}>
               Open
             </Text>

@@ -83,6 +83,7 @@ function useViewModel() {
       setSettingsData(data);
       setAutoMode(data.is_auto == 1 ? true : false);
     } catch (ex) {
+      console.log(ex.response.data);
       const apiError = apiError2Message(ex);
       if (apiError) {
         store.notification.showError(apiError);

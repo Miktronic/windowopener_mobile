@@ -103,6 +103,7 @@ export async function addDevice(values) {
       state: values.state,
       city: values.city,
       status: 0,
+      type: values.type,
     })
     .then(r => r.data?.data);
 }

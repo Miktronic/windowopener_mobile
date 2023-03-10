@@ -65,7 +65,7 @@ const AddDevice = () => {
         password,
         deviceId: peripheral.name,
         name,
-        type: 'opener',
+        type: 1,
         country,
         state,
       };
