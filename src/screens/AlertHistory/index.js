@@ -47,6 +47,7 @@ const AlertHistory = () => {
       setLoading(true);
       store.hud.show();
       const {total, items} = await Api.getLogs();
+      console.log(items);
       setMessages(items);
     } catch (ex) {
       const apiError = apiError2Message(ex);
