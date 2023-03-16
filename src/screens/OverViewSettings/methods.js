@@ -26,8 +26,8 @@ function useViewModel() {
   const store = useStore();
   const route = useRoute();
 
-  const [lowTemp, setLowTemp] = React.useState();
-  const [highTemp, setHighTemp] = React.useState();
+  const [lowTemp, setLowTemp] = React.useState("");
+  const [highTemp, setHighTemp] = React.useState("");
 
   const [errors, setErrors] = React.useState({});
 

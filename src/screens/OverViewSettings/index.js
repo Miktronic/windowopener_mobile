@@ -35,8 +35,9 @@ const OverViewSettings = () => {
   const devices = route.params?.devices;
   useEffect(() => {
     const settingsData = route.params?.settingsData;
-    const lowTemp = settingsData.low_temperature;
-    const highTemp = settingsData.high_temperature;
+    const lowTemp = settingsData?.low_temperature;
+    const highTemp = settingsData?.high_temperature;
+    
     if (lowTemp) vm.setLowTemp(lowTemp);
     if (highTemp) vm.setHighTemp(highTemp);
   }, [route.params]);
