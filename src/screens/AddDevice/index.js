@@ -21,24 +21,7 @@ import {connectPeripheral} from '@/utils/bluetooth';
 
 const yup = object().shape({
   name: string().trim().required(errorMessage('name', 'Enter name')),
-  type: string().trim().required(errorMessage('type', 'Select device type')),
-  country: object()
-    .shape({
-      id: string().required(),
-      name: string().required(),
-    })
-    .required(errorMessage('country', 'Select Country')),
-  state: object()
-    .shape({
-      id: string().required(),
-      name: string().required(),
-    })
-    .required(errorMessage('country', 'Select State')),
-  city: object().shape({
-    id: string(),
-    name: string(),
-  }),
-  ssid: string().required(errorMessage('ssid', 'Set WIFI SSID name')),
+  ssid: string().required(errorMessage('ssid','Set WIFI SSID name')),
   password: string().required(errorMessage('password', 'Set WIFI password')),
 });
 
@@ -50,14 +33,15 @@ const AddDevice = () => {
   const [state, setState] = useState();
   const [city, setCity] = useState();
   const {countries, states, cities} = useGeoHooks(country, state);
-  const [ssid, setSSID] = useState();
-  const [password, setPassword] = useState();
+  const [ssid, setSSID] = useState("");
+  const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const nav = useNavigation();
 
   const onPressAdd = async () => {
     try {
       store.hud.show();
+      console.log(errors);
       const peripheral = route.params.peripheral;
       setErrors({});
       let values = {
@@ -72,7 +56,16 @@ const AddDevice = () => {
       if (city?.id) {
         values.city = city;
       }
-      values = await yup.validate(values, {abortEarly: false});
+      try {
+        values = await yup.validate(values, {abortEarly: false});
+      } catch(ex) {{
+        let _errors = {};
+        ex.inner.forEach(error => {
+          _errors ={..._errors, ...error.errors[0] }
+        })
+        setErrors(_errors)
+        return;
+      }}
       try {
         const data = {
           ssid,
@@ -137,7 +130,7 @@ const AddDevice = () => {
           <FormControl.Label>Device ID</FormControl.Label>
           <Text>{route.params?.peripheral?.name ?? ''}</Text>
         </FormControl>
-        <FormControl mt={3} isInvalid={!!errors.ssid}>
+        <FormControl mt={3} isInvalid={!!errors.ssid} isRequired>
           <FormControl.Label>SSID</FormControl.Label>
           <FormInput
             onChangeText={setSSID}
@@ -148,7 +141,7 @@ const AddDevice = () => {
           />
           <FormControl.ErrorMessage>{errors.ssid}</FormControl.ErrorMessage>
         </FormControl>
-        <FormControl mt={3} isInvalid={!!errors.password}>
+        <FormControl mt={3} isInvalid={!!errors.password} isRequired>
           <FormControl.Label>Password</FormControl.Label>
           <FormInput
             onChangeText={setPassword}
@@ -159,7 +152,7 @@ const AddDevice = () => {
           />
           <FormControl.ErrorMessage>{errors.password}</FormControl.ErrorMessage>
         </FormControl>
-        <FormControl mt={3} isInvalid={!!errors.name}>
+        <FormControl mt={3} isInvalid={!!errors.name} isRequired>
           <FormControl.Label>Name</FormControl.Label>
           <FormInput
             onChangeText={setName}
