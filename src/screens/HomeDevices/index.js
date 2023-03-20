@@ -9,6 +9,7 @@ import {
   Slider,
   Icon,
   ScrollView,
+  View
 } from 'native-base';
 import {observer} from 'mobx-react';
 import useViewModel from './methods';
@@ -34,7 +35,7 @@ import {StaticDevices} from '@/data';
 const HomeDevices = () => {
   const vm = useViewModel();
   return (
-    <ScrollView>
+    <View>
       <Overview settingsData={vm.settingsData} devices={vm.devices} />
       <FlatList
         p={4}
@@ -54,7 +55,7 @@ const HomeDevices = () => {
           />
         )}
         ListEmptyComponent={vm.isLoading ? null : EmptyItemsView}></FlatList>
-    </ScrollView>
+    </View>
   );
 };
 

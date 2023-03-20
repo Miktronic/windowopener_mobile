@@ -48,9 +48,9 @@ const OverViewSettings = () => {
           <FormControl isInvalid={!!vm.errors.lowTemp}>
             <HStack space={4}>
               <TitledPlainInput
-                width="48%"
+                width="45%"
                 mt={vs(10)}
-                title={'Temp Range'}
+                title={'Temp Min Range'}
                 inputProps={{
                   value: String(vm.lowTemp),
                   onChangeText: vm.setLowTemp,
@@ -67,7 +67,7 @@ const OverViewSettings = () => {
                 mt={vs(10)}
                 width="48%"
                 type="select"
-                // title={'Email address'}
+                title={'Temp Max Range'}
                 inputProps={{
                   value: String(vm.highTemp),
                   onChangeText: vm.setHighTemp,
