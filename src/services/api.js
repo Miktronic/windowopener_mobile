@@ -3,7 +3,7 @@ import Config from '@/config';
 import store from '@/mst';
 
 const instance = axios.create({
-  baseURL: Config.apiEndPoint,
+  baseURL: Config.apiEndPoint.trim(),
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
