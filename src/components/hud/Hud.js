@@ -89,6 +89,7 @@ export default class Hud extends PureComponent {
             <Image
               style={[styles.image, imageStyle]}
               source={require('./src/info.png')}
+              alt="Info"
             />
           );
           break;
@@ -97,6 +98,7 @@ export default class Hud extends PureComponent {
             <Image
               style={[styles.image, imageStyle]}
               source={require('./src/success.png')}
+              alt="success"
             />
           );
           break;
@@ -105,14 +107,15 @@ export default class Hud extends PureComponent {
             <Image
               style={[styles.image, imageStyle]}
               source={require('./src/error.png')}
+              alt="success"
             />
           );
           break;
         default:
           if (this.props.source) {
-            hud = <Image style={[styles.image, imageStyle]} source={source} />;
+            hud = <Image style={[styles.image, imageStyle]} source={source} alt="image"/>;
           } else {
-            hud = <UIActivityIndicator {...hudProps} style={{flex: 0}} />;
+            hud = <UIActivityIndicator {...hudProps} style={{flex: 0}} alt="image"/>;
           }
           break;
       }

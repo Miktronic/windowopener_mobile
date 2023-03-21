@@ -38,8 +38,6 @@ function useViewModel() {
     setLoading(true);
     try {
       const data = await Api.getDevices()
-      console.log(data)
-      console.log('=========')
       setDevices(data);
     } catch (ex) {
       const apiError = apiError2Message(ex);

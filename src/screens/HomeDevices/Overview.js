@@ -89,7 +89,7 @@ export default Overview;
 const Temp = ({image, digree, data}) => {
   return (
     <Stack direction="row">
-      <Image source={image} style={styles.imageStyle} />
+      <Image source={image} style={styles.imageStyle} alt="image"/>
       <Stack space={1}>
         <Text fontSize="16" fontWeight="500">
           {digree}

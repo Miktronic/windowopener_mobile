@@ -24,7 +24,7 @@ const MainTabs = () => {
         options={{
           tabBarIcon: ({focused}) => {
             return (
-              <Image source={focused ? tabIconHomeActive : tabIconHome} h={6} />
+              <Image source={focused ? tabIconHomeActive : tabIconHome} h={6} alt="image"/>
             );
           },
         }}
@@ -38,6 +38,7 @@ const MainTabs = () => {
               <Image
                 source={focused ? tabIconAlertActive : tabIconAlert}
                 h={6}
+                alt="image"
               />
             );
           },
@@ -52,6 +53,7 @@ const MainTabs = () => {
               <Image
                 source={focused ? tabIconProfileActive : tabIconProfile}
                 h={6}
+                alt="image"
               />
             );
           },

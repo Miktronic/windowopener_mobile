@@ -15,10 +15,10 @@ const LoginBackground = () => {
       right={0}
       justifyContent={'space-between'}>
       <Column alignSelf={'flex-end'}>
-        <Image source={topEllipse} />
+        <Image source={topEllipse} alt="ellipse"/>
       </Column>
       <Column alignSelf={'flex-start'}>
-        <Image source={bottomEllipse} />
+        <Image source={bottomEllipse} alt="ellipse"/>
       </Column>
     </Column>
   );

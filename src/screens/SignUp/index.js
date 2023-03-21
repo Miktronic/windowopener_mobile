@@ -23,8 +23,8 @@ const SignUp = () => {
         <KeyboardAwareScrollView style={{flex: 1}}>
           <Column flex={1} px={4} mt={8}>
             <Row>
-              <Image source={smallLogo} mr={3}/>
-              <Image source={logoTitle}/>
+              <Image source={smallLogo} mr={3} alt="image"/>
+              <Image source={logoTitle} alt="image"/>
             </Row>
             <Heading size={'xl'} fontWeight={800} mt={vs(60)}>
               Sign Up

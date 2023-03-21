@@ -207,7 +207,6 @@ const CustomSlider = React.memo(
             sliderPrevValue.current = limitValueToRange(value);
             allowPrevValue.current = false;
           }
-          console.log(limitValueToRange(v))
           setValue(v);
         }}
         onChangeEnd={value => onOpenStatusChange(value)}

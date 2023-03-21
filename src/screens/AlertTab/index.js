@@ -17,7 +17,7 @@ const AlertTab = () => {
         options={{
           title: 'Event History',
           headerLeft: () => {
-            return <Image source={navHeaderBackImage} ml={4} />;
+            return <Image source={navHeaderBackImage} ml={4} alt="image"/>;
           },
         }}
       />

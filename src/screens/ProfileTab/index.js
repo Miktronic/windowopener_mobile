@@ -20,7 +20,7 @@ const ProfileTab = () => {
         options={{
           title: 'Profile',
           headerLeft: () => {
-            return <Image source={navHeaderBackImage} ml={4} />;
+            return <Image source={navHeaderBackImage} ml={4} alt="image"/>;
           },
         }}
       />

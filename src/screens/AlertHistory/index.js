@@ -148,7 +148,7 @@ const Separator = () => {
 const EmptyItemsView = () => {
   return (
     <Column alignItems={'center'} justifyContent={'center'} mt={20}>
-      <Image source={iconNoMessages} />
+      <Image source={iconNoMessages} alt="icon"/>
       <Text mt={3} italic color={'#8B8B88'} fontSize={21} textAlign={'center'}>
         No Events to show
       </Text>

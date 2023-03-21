@@ -26,12 +26,12 @@ const HomeTab = () => {
         options={{
           title: 'Home',
           headerLeft: () => {
-            return <Image source={navHeaderBackImage} ml={4} />;
+            return <Image source={navHeaderBackImage} ml={4} alt="image"/>;
           },
           headerRight: () => {
             return (
               <TouchableOpacity style={{padding: 12}} onPress={onPressAdd}>
-                <Image source={iconAdd} />
+                <Image source={iconAdd} alt="image"/>
               </TouchableOpacity>
             );
           },

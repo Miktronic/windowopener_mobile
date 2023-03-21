@@ -7,6 +7,8 @@ const User = types
   .model('User', {
     email: defString,
     token: defString,
+    lat: defString,
+    lang: defString
   })
   .actions(self => ({
     logIn: (email, token) => {
@@ -19,6 +21,10 @@ const User = types
     },
     updateToken: (token) => {
       self.token = token;
+    },
+    storeLocation: (lat, lang) => {
+      self.lat = lat,
+      self.lang = lang
     }
   }))
   .views(self => ({
