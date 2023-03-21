@@ -13,6 +13,7 @@ import SignUp from '@/screens/SignUp';
 import MainTabs from '@/screens/MainTabs';
 import ForgetPassword from '@/screens/ForgetPassword';
 import Loading from '@/screens/Loading';
+import EmailVerification from '@/screens/EmailVerification';
 
 const Stack = createStackNavigator();
 
@@ -27,6 +28,7 @@ const Route = () => {
         <Stack.Screen name={Screens.loading} component={Loading}/>
         <Stack.Screen name={Screens.login} component={Login}/>
         <Stack.Screen name={Screens.signUp} component={SignUp}/>
+        <Stack.Screen name={Screens.emailVerification} component={EmailVerification}/>
         <Stack.Screen name={Screens.mainTabs} component={MainTabs}/>
         <Stack.Screen name={Screens.forgetPassword} component={ForgetPassword}/>
       </Stack.Navigator>

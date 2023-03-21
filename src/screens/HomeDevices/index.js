@@ -93,8 +93,8 @@ const DeviceItem = ({
   const onOpenStatusChange = async newValue => {
     if (!(await confirmAlert('Are you sure?'))) {
       // switch back to old mode
-      setSliderValue(limitValueToRange( sliderPrevValue.current));
-      return;
+      setSliderValue(sliderPrevValue.current);
+      return true;
     }
     try {
       // call api
@@ -200,6 +200,7 @@ const CustomSlider = React.memo(
     console.log("Slider render")
     useEffect(() => {
       setV(value);
+      console.log("value changed")
     }, [value])
     return (
       <Slider
@@ -213,11 +214,17 @@ const CustomSlider = React.memo(
         onChange={v => {
           if (allowPrevValue.current) {
             sliderPrevValue.current = limitValueToRange(v);
+            console.log(sliderPrevValue.current);
             allowPrevValue.current = false;
           }
           setV(v);
         }}
-        onChangeEnd={value => onOpenStatusChange(value)}
+        onChangeEnd={async value => {
+          let result = await onOpenStatusChange(value);
+          if(result) {
+            setV(sliderPrevValue.current);
+          }
+        }}
         >
         <Slider.Track>
           <Slider.FilledTrack />
@@ -225,7 +232,7 @@ const CustomSlider = React.memo(
         <Slider.Thumb />
       </Slider>
     );
-  },
+  }
 );
 
 export default observer(HomeDevices);

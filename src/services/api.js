@@ -159,7 +159,7 @@ export async function deleteDevice(id) {
 
 export async function getLogs() {
   return instance
-    .post('/log', {
+    .get('/log', {
       page: 1,
       rows: 30,
     })
@@ -216,6 +216,12 @@ export async function forgotPassword(email) {
 export async function resetPassword({email, otp}) {
   return instance
     .post('/user/resetPassword', {email, otp})
+    .then(r => r.data?.data);
+}
+
+export async function emailVerification({otp}) {
+  return instance
+    .post('/emailVerification', {otp})
     .then(r => r.data?.data);
 }
 

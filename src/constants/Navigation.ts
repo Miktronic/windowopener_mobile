@@ -3,6 +3,7 @@ export const Screens = {
   login: 'login',
   signUp: 'signUp',
   mainTabs: 'mainTabs',
+  emailVerification: 'emailVerification',
   homeTab: 'homeTab',
   homeDevices: 'homeDevices',
   alertTab: 'alertTab',
