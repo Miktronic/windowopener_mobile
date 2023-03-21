@@ -31,6 +31,24 @@ const iconWifi = require('@/assets/images/keyboard.png');
 const iconWindow = require('@/assets/images/right.png');
 const iconWeatherSunny = require('@/assets/images/ic_weather_sunny.png');
 import {StaticDevices} from '@/data';
+const SLIDER_PROXIMITY = 10;
+const limitValueToRange = (original) => {
+  let value = parseInt(original)
+  let range = [0, 25, 50, 75, 100];
+  let result = 0;
+  range.forEach((v) => {
+    let min = v - SLIDER_PROXIMITY;
+    let max = v + SLIDER_PROXIMITY; 
+    if(value >= min && value <= max) {
+      result = v;
+      return;
+    } else if(value >= v) {
+      result = v;
+      return;
+    }
+  })
+  return result;
+}
 
 const HomeDevices = () => {
   const vm = useViewModel();
@@ -73,14 +91,16 @@ const DeviceItem = ({
   const onOpenStatusChange = async newValue => {
     if (!(await confirmAlert('Are you sure?'))) {
       // switch back to old mode
-      setSliderValue(sliderPrevValue.current);
+      setSliderValue(limitValueToRange( sliderPrevValue.current));
       return;
     }
     try {
       // call api
       store.hud.show();
-      await Api.setOpenStatus(item.id, sliderValue);
-      setSliderValue(newValue);
+      let sendValue = limitValueToRange( newValue)
+      console.log(sendValue)
+      await Api.setOpenStatus(item.id, sendValue);
+      setSliderValue(sendValue);
       allowPrevValue.current = true;
     } catch (ex) {
       const apiError = apiError2Message(ex);
@@ -168,25 +188,30 @@ const EmptyItemsView = () => {
   );
 };
 
+
+
 const CustomSlider = React.memo(
   ({value, setValue, onOpenStatusChange, sliderPrevValue, allowPrevValue}) => {
     return (
       <Slider
         mt={5}
+        
         size={'lg'}
         minValue={0}
         maxValue={100}
-        step={25}
+        step={1}
         defaultValue={50}
         value={value}
         onChange={v => {
           if (allowPrevValue.current) {
-            sliderPrevValue.current = value;
+            sliderPrevValue.current = limitValueToRange(value);
             allowPrevValue.current = false;
           }
+          console.log(limitValueToRange(v))
           setValue(v);
         }}
-        onChangeEnd={value => onOpenStatusChange(value)}>
+        onChangeEnd={value => onOpenStatusChange(value)}
+        >
         <Slider.Track>
           <Slider.FilledTrack />
         </Slider.Track>

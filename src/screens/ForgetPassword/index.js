@@ -133,7 +133,7 @@ const ForgetPassword = () => {
                   inputProps={{
                     keyboardType: 'email-address',
                     placeholder: 'Email here...',
-                    autoCorrect: 'none',
+                   
                     autoCapitalize: 'none',
                     value: email,
                     onChangeText: setEmail,
