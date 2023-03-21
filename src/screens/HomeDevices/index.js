@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Column,
   Text,
@@ -52,6 +52,7 @@ const limitValueToRange = (original) => {
 
 const HomeDevices = () => {
   const vm = useViewModel();
+  console.log('render..')
   return (
     <View style={{flex: 1}}>
       <Overview settingsData={vm.settingsData} devices={vm.devices} />
@@ -83,6 +84,7 @@ const DeviceItem = ({
   onToggleDeviceExpanded,
   onPressConfig,
 }) => {
+  console.log("Device Item")
   const [sliderValue, setSliderValue] = React.useState(item.status);
   const sliderPrevValue = useRef(null);
   const allowPrevValue = useRef(true);
@@ -151,6 +153,7 @@ const DeviceItem = ({
             onOpenStatusChange={onOpenStatusChange}
             sliderPrevValue={sliderPrevValue}
             allowPrevValue={allowPrevValue}
+            defaultValue={item.status}
           />
           <Row justifyContent={'space-between'}>
             <Text italic ml={-3} color={'#8b8b8b'}>
@@ -191,23 +194,28 @@ const EmptyItemsView = () => {
 
 
 const CustomSlider = React.memo(
-  ({value, setValue, onOpenStatusChange, sliderPrevValue, allowPrevValue}) => {
+  ({value, setValue, onOpenStatusChange, sliderPrevValue, allowPrevValue, defaultValue}) =>
+   {
+    const [v, setV] = useState(defaultValue);
+    console.log("Slider render")
+    useEffect(() => {
+      setV(value);
+    }, [value])
     return (
       <Slider
         mt={5}
-        
         size={'lg'}
         minValue={0}
         maxValue={100}
         step={1}
-        defaultValue={50}
-        value={value}
+        defaultValue={value}
+        value={v}
         onChange={v => {
           if (allowPrevValue.current) {
-            sliderPrevValue.current = limitValueToRange(value);
+            sliderPrevValue.current = limitValueToRange(v);
             allowPrevValue.current = false;
           }
-          setValue(v);
+          setV(v);
         }}
         onChangeEnd={value => onOpenStatusChange(value)}
         >
