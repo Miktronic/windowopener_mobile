@@ -93,6 +93,7 @@ function useViewModel() {
 
   useEffect(() => {
     getLocation().then().catch()
+    console.log("getting location")
   }, [])
 
   const onPressLogin = async () => {
@@ -103,10 +104,9 @@ function useViewModel() {
       const {access_token, token_type,data} = await Api.logIn(values);
       let lat = data?.latitude;
       let long = data?.longitude;
-
-      if(!lat || !long) {
-        console.log(lat, long);
+      console.log(lat, long);
         console.log(latitude, longitude)
+      if(!lat || !long) {
         if(latitude && longitude) {
           await Api.updateUserProfile({ 
             latitude,
