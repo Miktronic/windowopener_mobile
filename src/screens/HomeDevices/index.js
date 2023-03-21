@@ -35,7 +35,7 @@ import {StaticDevices} from '@/data';
 const HomeDevices = () => {
   const vm = useViewModel();
   return (
-    <View>
+    <View style={{flex: 1}}>
       <Overview settingsData={vm.settingsData} devices={vm.devices} />
       <FlatList
         p={4}

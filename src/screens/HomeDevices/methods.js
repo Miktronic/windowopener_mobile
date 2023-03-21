@@ -37,7 +37,10 @@ function useViewModel() {
     store.hud.show();
     setLoading(true);
     try {
-      setDevices(await Api.getDevices());
+      const data = await Api.getDevices()
+      console.log(data)
+      console.log('=========')
+      setDevices(data);
     } catch (ex) {
       const apiError = apiError2Message(ex);
       if (apiError) {
