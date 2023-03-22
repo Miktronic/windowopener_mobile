@@ -133,7 +133,7 @@ const ForgetPassword = () => {
                   inputProps={{
                     keyboardType: 'email-address',
                     placeholder: 'Email here...',
-                   
+                    
                     autoCapitalize: 'none',
                     value: email,
                     onChangeText: setEmail,
@@ -153,7 +153,9 @@ const ForgetPassword = () => {
                 title={'OTP Code'}
                 inputProps={{
                   placeholder: 'Verification Code',
-                  keyboardType: 'numeric'
+                  keyboardType: 'numeric',
+                  value: otp,
+                    onChangeText: setOtp,
                 }}
               />
               <FormControl.ErrorMessage>{errors.otp}</FormControl.ErrorMessage>
