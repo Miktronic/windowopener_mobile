@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import {Column, Image, Pressable, Row, Text, View} from 'native-base';
 import {observer} from 'mobx-react';
 import {TouchableOpacity} from 'react-native';
@@ -17,6 +17,8 @@ dayjs.extend(calendar);
 const AlertHistory = () => {
   const store = useStore();
   const [isLoading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const maxPage = useRef(null);
   const [messages, setMessages] = useState([]);
 
   const onPressDelete = async item => {
@@ -42,13 +44,18 @@ const AlertHistory = () => {
       .catch(() => {});
   };
 
-  const loadMessages = async () => {
+  const loadMessages = async (page) => {
     try {
       setLoading(true);
       store.hud.show();
-      const {total, items} = await Api.getLogs();
-      console.log(items);
-      setMessages(items);
+      const {totalPage, items, perPage} = await Api.getLogs(page);
+      maxPage.current = totalPage;
+      if(page == 1) {
+        setMessages(items)
+      } else {
+        setMessages(prev => [...prev,...items]);
+      }
+      
     } catch (ex) {
       const apiError = apiError2Message(ex);
       if (apiError) {
@@ -62,13 +69,13 @@ const AlertHistory = () => {
     }
   };
 
-  const onRefresh = () => {
-    loadMessages().then().catch();
+  const onRefresh = (page) => {
+    loadMessages(page).then().catch();
   };
 
   React.useEffect(() => {
-    onRefresh();
-  }, []);
+    onRefresh(page);
+  }, [page]);
 
   return (
     <SwipeListView
@@ -78,7 +85,7 @@ const AlertHistory = () => {
       closeOnRowBeginSwipe
       closeOnRowOpen
       keyExtractor={item => item.id}
-      onRefresh={onRefresh}
+      onRefresh={() => {setPage(1); onRefresh(1)}}
       refreshing={isLoading}
       ListEmptyComponent={EmptyItemsView}
       renderItem={({item}) => (
@@ -105,6 +112,12 @@ const AlertHistory = () => {
         </Row>
       )}
       rightOpenValue={-70}
+      onEndReached={() => {
+        if(page < maxPage.current) {
+          setPage(page => page + 1)
+        }
+      }}
+      onEndReachedThreshold={0.2}
     />
   );
 };

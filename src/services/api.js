@@ -157,13 +157,15 @@ export async function deleteDevice(id) {
   return instance.delete(`/device/${id}`).then(r => r.data?.data);
 }
 
-export async function getLogs() {
+export async function getLogs(page) {
   return instance
-    .get('/log', {
-      page: 1,
-      rows: 30,
-    })
-    .then(r => r.data?.data);
+    .get('/log', { params: { page } })
+    .then(r => {
+      
+      const data = r.data?.data;
+      console.log('data length ' + data.items.length);
+      return data;
+    });
 }
 
 export async function deleteLog(id) {
