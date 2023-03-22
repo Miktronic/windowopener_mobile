@@ -8,7 +8,7 @@ import {SafeAreaView} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import TitledInput from '@/components/TitledInput';
 import ActionButton from '@/components/buttons/ActionButton';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {Screens} from '@/constants/Navigation';
 import {useInterval, useStore} from '@/hooks';
 import * as Api from '@/services/api';
@@ -25,22 +25,16 @@ const yupOtp = object().shape({
     .required(errorMessage('otp', 'Enter OTP code')),
 });
 
-const yupEmail = object().shape({
-  email: string().trim()
-    .required(errorMessage('email', 'Enter e-mail address'))
-    .email(errorMessage('email', 'Enter valid e-mail address'))
-});
-
 const EmailVerification = () => {
   const nav = useNavigation();
-  const [remainingSeconds, setRemainingSeconds] = React.useState(0);
-  const [countDownInterval, setCountdownInterval] = React.useState(null);
-  const [email, setEmail] = React.useState('');
+  const route = useRoute();
+  const email = route.params ? route.params?.email : null;
+  const [remainingSeconds, setRemainingSeconds] = React.useState(60);
+  const [countDownInterval, setCountdownInterval] = React.useState(1000);
   const [otp, setOtp] = React.useState('');
-  const disabled = remainingSeconds > 0;
   const store = useStore();
   const [errors, setErrors] = React.useState({});
-
+  let disabled = remainingSeconds > 0;
   useInterval(() => {
     if (remainingSeconds > 1) {
       setRemainingSeconds(remainingSeconds - 1);
@@ -55,9 +49,9 @@ const EmailVerification = () => {
     setErrors({});
     try {
       store.hud.show();
-      yupOtp.validateSync({email, otp}, {abortEarly: false});
-      await Api.resetPassword({email, otp});
-      store.notification.showSuccess('Password was reset');
+      yupOtp.validateSync({otp}, {abortEarly: false});
+      await Api.emailVerification({email, otp});
+      store.notification.showSuccess('Email Verified Successfully');
       nav.navigate(Screens.login);
     } catch (ex) {
       const apiError = apiError2Message(ex);
@@ -78,14 +72,12 @@ const EmailVerification = () => {
     nav.navigate(Screens.login);
   };
 
-
   const onPressSend = async () => {
     if (remainingSeconds > 0) return;
     setErrors({});
     try {
       store.hud.show();
-      yupEmail.validateSync({email}, {abortEarly: false});
-      await Api.forgotPassword(email);
+      await Api.resendEmailVerification({email});
       store.notification.showSuccess('The verification code has been sent to your e-mail address');
     } catch (ex) {
       const apiError = apiError2Message(ex);
@@ -126,12 +118,18 @@ const EmailVerification = () => {
                 title={'OTP Code'}
                 inputProps={{
                   placeholder: 'Verification Code',
-                  keyboardType: 'numeric'
+                  keyboardType: 'numeric',
+                  value: otp,
+                  onChangeText: setOtp,
                 }}
               />
               <FormControl.ErrorMessage>{errors.otp}</FormControl.ErrorMessage>
             </FormControl>
             <ActionButton bold mt={vs(15)} onPress={onPressSubmit}>Submit</ActionButton>
+            <Button variant={'ghost'} mb={2} disabled={disabled} onPress={onPressSend}
+                        _text={{color: disabled ? '#8b8b8b' : 'primary.800'}}>
+                  {disabled ? `${remainingSeconds}` : 'Resend verification Email'}
+                </Button>
             <Button
               variant={'ghost'}
               onPress={onPressLogin}

@@ -49,7 +49,7 @@ function useViewModel() {
 
       store.notification.showSuccess('Sign up success')
       // on successful sign up, go to login
-      navigation.navigate(Screens.login, {email});
+      navigation.navigate(Screens.emailVerification, {email});
     }catch (ex){
       const apiError = apiError2Message(ex);
       if (apiError) {

@@ -26,9 +26,9 @@ const Route = () => {
     >
       <Stack.Navigator screenOptions={{headerShown: false}}>
         <Stack.Screen name={Screens.loading} component={Loading}/>
+        <Stack.Screen name={Screens.emailVerification} component={EmailVerification}/>
         <Stack.Screen name={Screens.login} component={Login}/>
         <Stack.Screen name={Screens.signUp} component={SignUp}/>
-        <Stack.Screen name={Screens.emailVerification} component={EmailVerification}/>
         <Stack.Screen name={Screens.mainTabs} component={MainTabs}/>
         <Stack.Screen name={Screens.forgetPassword} component={ForgetPassword}/>
       </Stack.Navigator>

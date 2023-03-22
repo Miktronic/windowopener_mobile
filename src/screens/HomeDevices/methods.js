@@ -58,6 +58,7 @@ function useViewModel() {
     try {
       const data = await Api.getSettings();
       setSettingsData(data);
+      console.log(data)
       setAutoMode(data.is_auto == 1 ? true : false);
     } catch (ex) {
       const apiError = apiError2Message(ex);

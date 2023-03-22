@@ -101,12 +101,17 @@ function useViewModel() {
     try{
       const values = yup.validateSync({email, password}, {abortEarly: false});
       store.hud.show();
-      const {access_token, token_type,data} = await Api.logIn(values);
+      const {access_token, token_type, data} = await Api.logIn(values);
+      console.log(access_token, token_type, data);
       let lat = data?.latitude;
       let long = data?.longitude;
       console.log(lat, long);
         console.log(latitude, longitude)
+      
+      store.notification.showSuccess('Login success');
+      store.user.logIn(email, access_token);
       if(!lat || !long) {
+        console.log("setting data....")
         if(latitude && longitude) {
           await Api.updateUserProfile({ 
             latitude,
@@ -115,8 +120,6 @@ function useViewModel() {
         }
         
       }
-      store.notification.showSuccess('Login success');
-      store.user.logIn(email, access_token);
 
       // on successful sign up, go to login
       resetWithScreen(navigation, Screens.mainTabs);

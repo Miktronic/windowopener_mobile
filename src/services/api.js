@@ -219,9 +219,16 @@ export async function resetPassword({email, otp}) {
     .then(r => r.data?.data);
 }
 
-export async function emailVerification({otp}) {
+export async function emailVerification({email,otp}) {
+  console.log(email, otp)
   return instance
-    .post('/emailVerification', {otp})
+    .post('/user/emailVerification', {email, otp})
+    .then(r => r.data?.data);
+}
+
+export async function resendEmailVerification({email}) {
+  return instance
+    .post('/user/resendEmailVerificationCode', {email})
     .then(r => r.data?.data);
 }
 
