@@ -101,12 +101,13 @@ function useViewModel() {
     try{
       const values = yup.validateSync({email, password}, {abortEarly: false});
       store.hud.show();
-      const {access_token, token_type, data} = await Api.logIn(values);
-      console.log(access_token, token_type, data);
+      const {access_token, token_type, data, verified} = await Api.logIn(values);
+      if(!verified) {
+        navigation.navigate(Screens.emailVerification, {email})
+        return;
+      }
       let lat = data?.latitude;
       let long = data?.longitude;
-      console.log(lat, long);
-        console.log(latitude, longitude)
       
       store.notification.showSuccess('Login success');
       store.user.logIn(email, access_token);

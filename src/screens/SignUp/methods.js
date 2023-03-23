@@ -9,7 +9,7 @@ import {errorMessage} from '@/utils/Yup';
 import {assignIn} from 'lodash';
 import * as Api from '@/services/api';
 import {Toast} from 'native-base';
-import {apiError2Message} from '@/utils';
+import {apiError2Error, apiError2Message} from '@/utils';
 
 const yup = object().shape({
   email: string().trim()
@@ -53,6 +53,7 @@ function useViewModel() {
     }catch (ex){
       const apiError = apiError2Message(ex);
       if (apiError) {
+        setErrors(apiError2Error(ex))
         store.notification.showError(apiError);
       }
       else if (ex.errors) {

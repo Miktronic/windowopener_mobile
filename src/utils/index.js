@@ -37,6 +37,19 @@ export const apiError2Message = (ex) => {
   }).join('\n');
 }
 
+export const apiError2Error = (ex) => {
+  const errors = ex?.response?.data?.errors;
+  let err = {}
+  if (!errors) {
+    return err;
+  }
+  
+  _.forEach(errors, (value, key) => {
+    err[key] = value.join(',')
+  })
+  return err;
+}
+
 export const sleep = (ms) => {
   return new Promise((resolve, reject) => setTimeout(() => resolve(ms), ms));
 }
