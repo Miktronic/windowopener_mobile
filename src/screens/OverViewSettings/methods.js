@@ -11,11 +11,11 @@ import {apiError2Message} from '@/utils';
 import {errorMessage} from '@/utils/Yup';
 
 const yup = object().shape({
-  lowTemp: number()
+  lowTemp: string()
     .min(-200)
     .max(200)
     .required(errorMessage('lowTemp', 'Please enter minimum temperature')),
-  highTemp: number()
+  highTemp: string()
     .min(-200)
     .max(200)
     .required(errorMessage('highTemp', 'Please enter maximum temperature')),
@@ -47,6 +47,7 @@ function useViewModel() {
         refreshDevices: true,
       });
     } catch (ex) {
+      console.log(JSON.stringify(ex));
       const apiError = apiError2Message(ex);
       if (apiError) {
         store.notification.showError(apiError);
