@@ -46,54 +46,16 @@ const Settings = () => {
     }
   };
 
-  const requestLocationPermission = async () => {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-          title: "Geolocation Permission",
-          message: "Can we access your location?",
-          buttonNeutral: "Ask Me Later",
-          buttonNegative: "Cancel",
-          buttonPositive: "OK",
-        }
-      );
-      console.log("granted", granted);
-      if (granted === "granted") {
-        console.log("You can use Geolocation");
-        return true;
-      } else {
-        console.log("You cannot use Geolocation");
-        return false;
-      }
-    } catch (err) {
-      return false;
-    }
-  };
-
   const getLocation = async() => {
-    const result = requestLocationPermission();
-    result.then((res) => {
-      console.log("res is:", res);
-      if (res) {
-        Geolocation.getCurrentPosition(
-          (position) => {
-            console.log(position, 'position....');
-            setLocation(position);
-            setLatitude(position?.coords?.latitude.toString());
-            setLongitude(position?.coords?.longitude.toString());
-           
-          },
-          (error) => {
-            // See error code charts below.
-            console.log(error.code, error.message);
-            setLocation(false);
-          },
-          { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-        );
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        store.notification.showError("Location Permission Not Granted. Please allow location permission for this app.");
+        return;
       }
-    });
-    console.log(location);
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location)
+      setLatitude(location.coords.latitude.toString())
+      setLongitude(location.coords.longitude.toString())
   };
 
   const checkNull = (value) =>{
@@ -108,7 +70,6 @@ const Settings = () => {
   useEffect(() => {
 
     const getPlace = async() =>{
-      console.log(location,'location now...')
       if(location){
         const place = await Location.reverseGeocodeAsync({
           latitude: Number(location.coords.latitude),
@@ -144,7 +105,6 @@ const Settings = () => {
   }, [location])
 
   const getDeviceLocation = (value) => {
-    console.log(value, "value...........");
     setIsSelected(value);
     if (value) {
       getLocation()
@@ -157,8 +117,9 @@ const Settings = () => {
   };
 
   React.useEffect(() => {
-    loadProfile().then().catch(console.log);
+    loadProfile().then().catch();
   }, []);
+
 
   const onPressSave = async () => {
     try {

@@ -53,7 +53,12 @@ function useViewModel() {
     }catch (ex){
       const apiError = apiError2Message(ex);
       if (apiError) {
-        setErrors(apiError2Error(ex))
+        try{
+          setErrors(apiError2Error(ex))
+        } catch(e) {
+
+        }
+        
         store.notification.showError(apiError);
       }
       else if (ex.errors) {
