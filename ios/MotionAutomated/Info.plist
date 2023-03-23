@@ -46,6 +46,14 @@
 	<string>The app requires access to Camera</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>The app requires access to Photo Library</string>
+
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Location Permission</string>
+    <key>NSLocationUsageDescription</key>
+    <string>GPS data is required to get your current location information</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Location Permission</string>
+
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
