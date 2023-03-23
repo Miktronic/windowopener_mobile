@@ -47,7 +47,7 @@ const AlertHistory = () => {
   const loadMessages = async (page) => {
     try {
       setLoading(true);
-      store.hud.show();
+     
       const {totalPage, items, perPage} = await Api.getLogs(page);
       maxPage.current = totalPage;
       if(page == 1) {
@@ -64,7 +64,7 @@ const AlertHistory = () => {
         store.notification.showError(ex.message);
       }
     } finally {
-      store.hud.hide();
+      
       setLoading(false);
     }
   };
@@ -88,13 +88,14 @@ const AlertHistory = () => {
       onRefresh={() => {setPage(1); onRefresh(1)}}
       refreshing={isLoading}
       ListEmptyComponent={EmptyItemsView}
-      renderItem={({item}) => (
-        <MessageItem
+      renderItem={({item}) => {
+        return (<MessageItem
           title={item.alias}
           content={item.content}
-          time={item.time}
-        />
-      )}
+          time={item.timestamp}
+        />)
+      }
+      }
       renderHiddenItem={({item}) => (
         <Row justifyContent={'flex-end'} flex={1} alignSelf={'stretch'}>
           <Pressable

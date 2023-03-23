@@ -161,9 +161,7 @@ export async function getLogs(page) {
   return instance
     .get('/log', { params: { page } })
     .then(r => {
-      
       const data = r.data?.data;
-      console.log('data length ' + data.items.length);
       return data;
     });
 }

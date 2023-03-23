@@ -52,7 +52,7 @@ const limitValueToRange = (original) => {
 
 const HomeDevices = () => {
   const vm = useViewModel();
-  console.log('render..')
+  
   return (
     <View style={{flex: 1}}>
       <Overview settingsData={vm.settingsData} devices={vm.devices} />
@@ -84,7 +84,7 @@ const DeviceItem = ({
   onToggleDeviceExpanded,
   onPressConfig,
 }) => {
-  console.log("Device Item")
+  
   const [sliderValue, setSliderValue] = React.useState(item.status);
   const sliderPrevValue = useRef(null);
   const allowPrevValue = useRef(true);
@@ -100,7 +100,6 @@ const DeviceItem = ({
       // call api
       store.hud.show();
       let sendValue = limitValueToRange( newValue)
-      console.log(sendValue)
       await Api.setOpenStatus(item.id, sendValue);
       setSliderValue(sendValue);
       allowPrevValue.current = true;
@@ -197,10 +196,8 @@ const CustomSlider = React.memo(
   ({value, setValue, onOpenStatusChange, sliderPrevValue, allowPrevValue, defaultValue}) =>
    {
     const [v, setV] = useState(defaultValue);
-    console.log("Slider render")
     useEffect(() => {
       setV(value);
-      console.log("value changed")
     }, [value])
     return (
       <Slider
@@ -214,7 +211,6 @@ const CustomSlider = React.memo(
         onChange={v => {
           if (allowPrevValue.current) {
             sliderPrevValue.current = limitValueToRange(v);
-            console.log(sliderPrevValue.current);
             allowPrevValue.current = false;
           }
           setV(v);
