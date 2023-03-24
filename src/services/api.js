@@ -99,9 +99,9 @@ export async function addDevice(values) {
     .post('/device', {
       device_address: values.deviceId,
       alias: values.name,
-      country: values.country,
-      state: values.state,
-      city: values.city,
+      country_id: values?.country?.id,
+      state_id: values?.state?.id,
+      city_id: values?.city?.id,
       status: 0,
       type: values.type,
     })
