@@ -4,7 +4,7 @@ import FormInput from '@/components/FormInput';
 import { useStore } from '@/hooks';
 import * as Api from '@/services/api';
 import { apiError2Message } from '@/utils';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import * as Location from 'expo-location';
 import { observer } from 'mobx-react';
 import { Column, FormControl, HStack, Switch, Text } from 'native-base';
@@ -29,7 +29,7 @@ const Settings = () => {
       store.hud.show();
       const { name, gps_location, address, zip_code, latitude, longitude } = await Api.getUserProfile();
       setName(name);
-      setIsSelected(gps_location == 1 ? true : false);
+      setIsSelected(false);
       setAddress(address);
       setZipCode(zip_code);
       setLatitude(latitude);
@@ -103,6 +103,7 @@ const Settings = () => {
     getPlace()
 
   }, [location])
+
 
   const getDeviceLocation = (value) => {
     setIsSelected(value);

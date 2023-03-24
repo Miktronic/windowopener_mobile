@@ -37,11 +37,10 @@ const AlertHistory = () => {
       }
     } finally {
       store.hud.hide();
+      onRefresh(1).then().catch();
       setLoading(false);
     }
-    loadMessages()
-      .then()
-      .catch(() => {});
+    
   };
 
   const loadMessages = async (page) => {
