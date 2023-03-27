@@ -37,9 +37,9 @@ const OverViewSettings = () => {
     const settingsData = route.params?.settingsData;
     const lowTemp = settingsData?.low_temperature;
     const highTemp = settingsData?.high_temperature;
-    
-    if (lowTemp) vm.setLowTemp(lowTemp);
-    if (highTemp) vm.setHighTemp(highTemp);
+
+    if (lowTemp != null) vm.setLowTemp(lowTemp);
+    if (highTemp != null) vm.setHighTemp(highTemp);
   }, [route.params]);
   return (
     <SafeAreaView flex={1}>
