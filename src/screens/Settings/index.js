@@ -1,17 +1,17 @@
 /* eslint-disable */
 import ActionButton from '@/components/buttons/ActionButton';
 import FormInput from '@/components/FormInput';
-import { useStore } from '@/hooks';
+import {useStore} from '@/hooks';
 import * as Api from '@/services/api';
-import { apiError2Message } from '@/utils';
-import { useIsFocused, useNavigation } from '@react-navigation/native';
+import {apiError2Message} from '@/utils';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import * as Location from 'expo-location';
-import { observer } from 'mobx-react';
-import { Column, FormControl, HStack, Switch, Text } from 'native-base';
-import React, { useEffect, useState } from 'react';
-import { PermissionsAndroid, View } from 'react-native';
-import Geolocation from "react-native-geolocation-service";
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {observer} from 'mobx-react';
+import {Column, FormControl, HStack, Switch, Text} from 'native-base';
+import React, {useEffect, useState} from 'react';
+import {PermissionsAndroid, View} from 'react-native';
+import Geolocation from 'react-native-geolocation-service';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 const Settings = () => {
   const [name, setName] = useState('');
@@ -27,7 +27,8 @@ const Settings = () => {
   const loadProfile = async () => {
     try {
       store.hud.show();
-      const { name, gps_location, address, zip_code, latitude, longitude } = await Api.getUserProfile();
+      const {name, gps_location, address, zip_code, latitude, longitude} =
+        await Api.getUserProfile();
       setName(name);
       setIsSelected(false);
       setAddress(address);
@@ -46,35 +47,60 @@ const Settings = () => {
     }
   };
 
-  const getLocation = async() => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        store.notification.showError("Location Permission Not Granted. Please allow location permission for this app.");
-        return;
-      }
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location)
-      setLatitude(location.coords.latitude.toString())
-      setLongitude(location.coords.longitude.toString())
+  const getLocation = async () => {
+    let {status} = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      store.notification.showError(
+        'Location Permission Not Granted. Please allow location permission for this app.',
+      );
+      return;
+    }
+    // let location = await Location.getLastKnownPositionAsync({});
+    // console.log(location);
+    // if (!location) {
+    //   console.log('Getting last known position');
+    //   location = await Location.getCurrentPositionAsync();
+    // }
+    // setLocation(location);
+    // setLatitude(location.coords.latitude.toString());
+    // setLongitude(location.coords.longitude.toString());
+    Geolocation.getCurrentPosition(
+      location => {
+        console.log(location);
+        setLocation(location);
+
+        setLatitude(location.coords.latitude.toString());
+        setLongitude(location.coords.longitude.toString());
+      },
+      err => {
+        console.log(err);
+        if (err?.message) {
+          store.notification.showError(err.message);
+        }
+      },
+      {
+        showLocationDialog: true,
+        forceRequestLocation: true,
+        forceLocationManager: true,
+      },
+    );
   };
 
-  const checkNull = (value) =>{
-    if(value === null){
-      return ''
-    }else {
-      return value + ', '
+  const checkNull = value => {
+    if (value === null) {
+      return '';
+    } else {
+      return value + ', ';
     }
-
-  }
+  };
 
   useEffect(() => {
-
-    const getPlace = async() =>{
-      if(location){
+    const getPlace = async () => {
+      if (location) {
         const place = await Location.reverseGeocodeAsync({
           latitude: Number(location.coords.latitude),
-          longitude: Number(location.coords.longitude)
-        })  
+          longitude: Number(location.coords.longitude),
+        });
 
         /* const place = await Location.reverseGeocodeAsync({
           latitude: Number('51.507351'),
@@ -83,37 +109,38 @@ const Settings = () => {
 
         // console.log(place,'palce........')
 
-        let placeName = place.map(p=> {
-          if(p.postalCode){
-            setZipCode(p.postalCode)
+        let placeName = place.map(p => {
+          if (p.postalCode) {
+            setZipCode(p.postalCode);
           }
-          return (checkNull(p.streetNumber) + checkNull(p.street) + checkNull(p.city) + p.country)
-        })
+          return (
+            checkNull(p.streetNumber) +
+            checkNull(p.street) +
+            checkNull(p.city) +
+            p.country
+          );
+        });
         // console.log(placeName,'placename....')
-        if(placeName.length > 0){
-          setAddress(placeName[0])
+        if (placeName.length > 0) {
+          setAddress(placeName[0]);
         }
-        
-      }else{
-        setAddress('')
-        setZipCode('')
+      } else {
+        setAddress('');
+        setZipCode('');
       }
-      
-    }
-    getPlace()
+    };
+    getPlace();
+  }, [location]);
 
-  }, [location])
-
-
-  const getDeviceLocation = (value) => {
+  const getDeviceLocation = value => {
     setIsSelected(value);
     if (value) {
-      getLocation()
+      getLocation();
     } else {
       setLatitude('');
       setLongitude('');
-      setAddress('')
-      setZipCode('')
+      setAddress('');
+      setZipCode('');
     }
   };
 
@@ -121,14 +148,13 @@ const Settings = () => {
     loadProfile().then().catch();
   }, []);
 
-
   const onPressSave = async () => {
     try {
       store.hud.show();
-      await Api.updateUserProfile({ 
-        name, 
-        gps_location: isSelected, 
-        address, 
+      await Api.updateUserProfile({
+        name,
+        gps_location: isSelected,
+        address,
         zip_code: zipCode,
         latitude,
         longitude,
@@ -167,30 +193,27 @@ const Settings = () => {
           <FormControl.Label>Address</FormControl.Label>
           <FormInput onChangeText={setAddress} value={address} />
         </FormControl>
-        <FormControl
-          mt={3}
-        >
-        <FormControl.Label>Use GPS</FormControl.Label>
-          <View  style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-          }}>
-        <HStack mr={5}>
-            <Switch
-              size="lg"
-              isChecked={isSelected}
-              onValueChange={(value) => getDeviceLocation(value)}
-            />
-          </HStack>
-          {
-            <Text>
-              {isSelected
-                ? "Get Location from GPS"
-                : "Set Location manullay"}
-            </Text>
-          }
-        </View>
+        <FormControl mt={3}>
+          <FormControl.Label>Use GPS</FormControl.Label>
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <HStack mr={5}>
+              <Switch
+                size="lg"
+                isChecked={isSelected}
+                onValueChange={value => getDeviceLocation(value)}
+              />
+            </HStack>
+            {
+              <Text>
+                {isSelected ? 'Get Location from GPS' : 'Set Location manullay'}
+              </Text>
+            }
+          </View>
         </FormControl>
         <FormControl mt={3}>
           <FormControl.Label>ZIP Code</FormControl.Label>

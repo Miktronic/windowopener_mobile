@@ -9,17 +9,19 @@ import {apiError2Message} from '@/utils';
 import {assignIn} from 'lodash';
 import {object, string} from 'yup';
 import {errorMessage} from '@/utils/Yup';
-import { PermissionsAndroid, Platform, View  } from 'react-native';
-import Geolocation, { requestAuthorization } from "react-native-geolocation-service";
+import {PermissionsAndroid, Platform, View} from 'react-native';
+import Geolocation, {
+  requestAuthorization,
+} from 'react-native-geolocation-service';
 import * as Location from 'expo-location';
 
 const yup = object().shape({
-  email: string().trim()
+  email: string()
+    .trim()
     .required(errorMessage('email', 'Enter e-mail address'))
-    .email(errorMessage('email', 'Enter valid e-mail address'))
-  ,
-  password: string().
-  trim()
+    .email(errorMessage('email', 'Enter valid e-mail address')),
+  password: string()
+    .trim()
     .required(errorMessage('password', 'Enter password')),
 });
 
@@ -38,53 +40,51 @@ function useViewModel() {
 
   const requestLocationPermission = async () => {
     try {
-      if(Platform.OS == "ios") {
-        console.log("request")
+      if (Platform.OS == 'ios') {
+        console.log('request');
         console.log(requestAuthorization());
       } else {
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
           {
-            title: "Geolocation Permission",
-            message: "Can we access your location?",
-            buttonNeutral: "Ask Me Later",
-            buttonNegative: "Cancel",
-            buttonPositive: "OK",
-          }
+            title: 'Geolocation Permission',
+            message: 'Can we access your location?',
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK',
+          },
         );
-        console.log("granted", granted);
-        if (granted === "granted") {
-          console.log("You can use Geolocation");
+        console.log('granted', granted);
+        if (granted === 'granted') {
+          console.log('You can use Geolocation');
           return true;
         } else {
-          console.log("You cannot use Geolocation");
+          console.log('You cannot use Geolocation');
           return false;
         }
       }
-      
     } catch (err) {
       return false;
     }
   };
 
-  const getLocation = async() => {
+  const getLocation = async () => {
     const result = requestLocationPermission();
-    result.then((res) => {
-      console.log("res is:", res);
+    result.then(res => {
+      console.log('res is:', res);
       if (res) {
         Geolocation.getCurrentPosition(
-          (position) => {
+          position => {
             setLocation(position);
             setLatitude(position?.coords?.latitude.toString());
             setLongitude(position?.coords?.longitude.toString());
-           
           },
-          (error) => {
+          error => {
             // See error code charts below.
             console.log(error.code, error.message);
             setLocation(false);
           },
-          { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+          {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
         );
       }
     });
@@ -99,18 +99,29 @@ function useViewModel() {
   }, [route.params]);
   useEffect(() => {
     (async () => {
-      
-      let { status } = await Location.requestForegroundPermissionsAsync();
+      let {status} = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
-        store.notification.showError("Location Permission Not Granted. Please allow location permission for this app.");
+        store.notification.showError(
+          'Location Permission Not Granted. Please allow location permission for this app.',
+        );
         return;
       }
 
-      let location = await Location.getCurrentPositionAsync({});
-      console.log("location", location)
-      setLatitude(location.coords.latitude)
-      setLongitude(location.coords.longitude)
-      
+      Geolocation.getCurrentPosition(
+        location => {
+          setLocation(location);
+          setLatitude(location.coords.latitude.toString());
+          setLongitude(location.coords.longitude.toString());
+        },
+        err => {
+          console.log(err);
+        },
+        {
+          showLocationDialog: true,
+          forceRequestLocation: true,
+          forceLocationManager: true,
+        },
+      );
     })();
   }, []);
 
@@ -121,45 +132,45 @@ function useViewModel() {
 
   const onPressLogin = async () => {
     setErrors({});
-    try{
+    try {
       const values = yup.validateSync({email, password}, {abortEarly: false});
       store.hud.show();
-      const {access_token, token_type, data, verified} = await Api.logIn(values);
-      if(!verified) {
-        navigation.navigate(Screens.emailVerification, {email})
+      const {access_token, token_type, data, verified} = await Api.logIn(
+        values,
+      );
+      if (!verified) {
+        navigation.navigate(Screens.emailVerification, {email});
         return;
       }
       let lat = data?.latitude;
       let long = data?.longitude;
-      
+
       store.notification.showSuccess('Login success');
       store.user.logIn(email, access_token);
-      if(!lat || !long) {
-        console.log("setting data....")
-        if(latitude && longitude) {
-          await Api.updateUserProfile({ 
+      if (!lat || !long) {
+        console.log('setting data....');
+        if (latitude && longitude) {
+          await Api.updateUserProfile({
             latitude,
             longitude,
-          })
+          });
         }
-        
       }
 
       // on successful sign up, go to login
       resetWithScreen(navigation, Screens.mainTabs);
-    }catch (ex){
+    } catch (ex) {
       const apiError = apiError2Message(ex);
       if (apiError) {
         store.notification.showError(apiError);
-      }
-      else if (ex.errors) {
+      } else if (ex.errors) {
         const _errors = assignIn({}, ...ex.errors);
         setErrors(_errors);
       } else {
         //Toast.show({title: 'Signup Failed', status: 'error'});
         store.notification.showError(ex.message);
       }
-    }finally {
+    } finally {
       store.hud.hide();
     }
     //resetWithScreen(navigation, Screens.mainTabs);
@@ -171,7 +182,7 @@ function useViewModel() {
 
   const onPressForgetPassword = () => {
     navigation.navigate(Screens.forgetPassword);
-  }
+  };
 
   return {
     store,
@@ -179,8 +190,10 @@ function useViewModel() {
     onPressLogin,
     onPressSignUp,
     onPressForgetPassword,
-    email, setEmail,
-    password, setPassword
+    email,
+    setEmail,
+    password,
+    setPassword,
   };
 }
 
