@@ -26,8 +26,8 @@ function useViewModel() {
   const store = useStore();
   const route = useRoute();
 
-  const [lowTemp, setLowTemp] = React.useState("");
-  const [highTemp, setHighTemp] = React.useState("");
+  const [lowTemp, setLowTemp] = React.useState('');
+  const [highTemp, setHighTemp] = React.useState('');
 
   const [errors, setErrors] = React.useState({});
 
@@ -35,7 +35,13 @@ function useViewModel() {
     setErrors({});
     try {
       const values = yup.validateSync({lowTemp, highTemp}, {abortEarly: false});
-      console.log(values);
+      console.log(lowTemp, highTemp);
+      if (lowTemp > highTemp) {
+        store.notification.showError(
+          'Low temp range must be smaller than high temp range',
+        );
+        return;
+      }
       store.hud.show();
       const data = await Api.updateSettings({
         low_temperature: lowTemp,

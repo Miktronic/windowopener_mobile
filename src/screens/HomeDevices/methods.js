@@ -37,7 +37,7 @@ function useViewModel() {
     store.hud.show();
     setLoading(true);
     try {
-      const data = await Api.getDevices()
+      const data = await Api.getDevices();
       setDevices(data);
     } catch (ex) {
       const apiError = apiError2Message(ex);
@@ -58,7 +58,7 @@ function useViewModel() {
     try {
       const data = await Api.getSettings();
       setSettingsData(data);
-      console.log(data)
+      console.log(data);
       setAutoMode(data.is_auto == 1 ? true : false);
     } catch (ex) {
       const apiError = apiError2Message(ex);
@@ -77,6 +77,16 @@ function useViewModel() {
     if (!(await confirmAlert('Are you sure?'))) {
       return;
     }
+    if (
+      settingsData.low_temperature == 0 &&
+      settingsData.high_temperature == 0
+    ) {
+      store.notification.showError(
+        'Please set high and low temperature range from setting before turning on auto mode.',
+      );
+      return;
+    }
+
     store.hud.show();
     setLoading(true);
     try {
