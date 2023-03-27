@@ -4,7 +4,10 @@ import {observer} from 'mobx-react';
 import {TouchableOpacity} from 'react-native';
 import dayjs from 'dayjs';
 import calendar from 'dayjs/plugin/calendar';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
 import * as Api from '@/services/api';
+import * as RNLocalize from 'react-native-localize';
 
 import {SwipeListView} from 'react-native-swipe-list-view';
 import {useStore} from '@/hooks';
@@ -12,7 +15,12 @@ import {apiError2Message} from '@/utils';
 import {confirmAlert} from '@/utils/alert';
 
 const iconNoMessages = require('@/assets/images/logo_no_alerts.png');
+
 dayjs.extend(calendar);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+console.log();
 
 const AlertHistory = () => {
   const store = useStore();
@@ -40,21 +48,19 @@ const AlertHistory = () => {
       onRefresh(1).then().catch();
       setLoading(false);
     }
-    
   };
 
-  const loadMessages = async (page) => {
+  const loadMessages = async page => {
     try {
       setLoading(true);
-     
+
       const {totalPage, items, perPage} = await Api.getLogs(page);
       maxPage.current = totalPage;
-      if(page == 1) {
-        setMessages(items)
+      if (page == 1) {
+        setMessages(items);
       } else {
-        setMessages(prev => [...prev,...items]);
+        setMessages(prev => [...prev, ...items]);
       }
-      
     } catch (ex) {
       const apiError = apiError2Message(ex);
       if (apiError) {
@@ -63,12 +69,11 @@ const AlertHistory = () => {
         store.notification.showError(ex.message);
       }
     } finally {
-      
       setLoading(false);
     }
   };
 
-  const onRefresh = (page) => {
+  const onRefresh = page => {
     loadMessages(page).then().catch();
   };
 
@@ -84,17 +89,21 @@ const AlertHistory = () => {
       closeOnRowBeginSwipe
       closeOnRowOpen
       keyExtractor={item => item.id}
-      onRefresh={() => {setPage(1); onRefresh(1)}}
+      onRefresh={() => {
+        setPage(1);
+        onRefresh(1);
+      }}
       refreshing={isLoading}
       ListEmptyComponent={EmptyItemsView}
       renderItem={({item}) => {
-        return (<MessageItem
-          title={item.alias}
-          content={item.content}
-          time={item.timestamp}
-        />)
-      }
-      }
+        return (
+          <MessageItem
+            title={item.alias}
+            content={item.content}
+            time={item.timestamp}
+          />
+        );
+      }}
       renderHiddenItem={({item}) => (
         <Row justifyContent={'flex-end'} flex={1} alignSelf={'stretch'}>
           <Pressable
@@ -113,8 +122,8 @@ const AlertHistory = () => {
       )}
       rightOpenValue={-70}
       onEndReached={() => {
-        if(page < maxPage.current) {
-          setPage(page => page + 1)
+        if (page < maxPage.current) {
+          setPage(page => page + 1);
         }
       }}
       onEndReachedThreshold={0.2}
@@ -124,7 +133,7 @@ const AlertHistory = () => {
 
 const MessageItem = ({title, content, time}) => {
   const timeText = React.useMemo(() => {
-    return dayjs(time).calendar(null, {
+    return dayjs.utc(time).tz(RNLocalize.getTimeZone()).calendar(null, {
       sameDay: 'h:mm A',
       nextDay: 'MM/DD/YYYY',
       nextWeek: 'MM/DD/YYYY',
@@ -161,7 +170,7 @@ const Separator = () => {
 const EmptyItemsView = () => {
   return (
     <Column alignItems={'center'} justifyContent={'center'} mt={20}>
-      <Image source={iconNoMessages} alt="icon"/>
+      <Image source={iconNoMessages} alt="icon" />
       <Text mt={3} italic color={'#8B8B88'} fontSize={21} textAlign={'center'}>
         No Events to show
       </Text>
