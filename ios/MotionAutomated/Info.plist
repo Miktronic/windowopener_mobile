@@ -32,6 +32,8 @@
 		<true/>
 		<key>NSExceptionDomains</key>
 		<dict>
+			<key>198.211.108.247</key>
+			<string></string>
 			<key>127.0.0.1</key>
 			<string></string>
 			<key>localhost</key>
@@ -44,16 +46,14 @@
 	<string>The app requires to access Bluetooth</string>
 	<key>NSCameraUsageDescription</key>
 	<string>The app requires access to Camera</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Location Permission</string>
+	<key>NSLocationUsageDescription</key>
+	<string>GPS data is required to get your current location information</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Location Permission</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>The app requires access to Photo Library</string>
-
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>Location Permission</string>
-    <key>NSLocationUsageDescription</key>
-    <string>GPS data is required to get your current location information</string>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>Location Permission</string>
-
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

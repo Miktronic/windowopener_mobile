@@ -381,6 +381,8 @@ PODS:
     - React
   - RNGestureHandler (1.10.3):
     - React-Core
+  - RNLocalize (2.2.6):
+    - React-Core
   - RNPermissions (3.6.1):
     - React-Core
   - RNScreens (3.9.0):
@@ -469,6 +471,7 @@ DEPENDENCIES:
   - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNLocalize (from `../node_modules/react-native-localize`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -592,6 +595,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/masked-view"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNLocalize:
+    :path: "../node_modules/react-native-localize"
   RNPermissions:
     :path: "../node_modules/react-native-permissions"
   RNScreens:
@@ -668,6 +673,7 @@ SPEC CHECKSUMS:
   RNCClipboard: 99fc8ad669a376b756fbc8098ae2fd05c0ed0668
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
+  RNLocalize: d4b8af4e442d4bcca54e68fc687a2129b4d71a81
   RNPermissions: dcdb7b99796bbeda6975a6e79ad519c41b251b1c
   RNScreens: 4d79118be80f79fa1f4aa131909a1d6e86280af3
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f

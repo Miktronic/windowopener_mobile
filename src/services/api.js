@@ -61,6 +61,8 @@ export async function signUp({email, password}) {
 }
 
 export async function logIn({email, password}) {
+  console.log(instance.defaults.baseURL)
+  console.log(instance.defaults.baseURL == 'http://198.211.108.247/api/v1')
   return instance.post('/user/login', {email, password}).then(r => r.data);
 }
 
