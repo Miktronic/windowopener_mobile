@@ -75,7 +75,9 @@ const Settings = () => {
       err => {
         console.log(err);
         if (err?.message) {
-          store.notification.showError(err.message);
+          store.notification.showError(
+            'Please enable gps from settings to get location automatically.',
+          );
         }
       },
       {

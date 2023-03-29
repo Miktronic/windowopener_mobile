@@ -21,7 +21,7 @@ import {connectPeripheral} from '@/utils/bluetooth';
 
 const yup = object().shape({
   name: string().trim().required(errorMessage('name', 'Enter name')),
-  ssid: string().required(errorMessage('ssid','Set WIFI SSID name')),
+  ssid: string().required(errorMessage('ssid', 'Set WIFI SSID name')),
   password: string().required(errorMessage('password', 'Set WIFI password')),
 });
 
@@ -33,8 +33,8 @@ const AddDevice = () => {
   const [state, setState] = useState();
   const [city, setCity] = useState();
   const {countries, states, cities} = useGeoHooks(country, state);
-  const [ssid, setSSID] = useState("");
-  const [password, setPassword] = useState("");
+  const [ssid, setSSID] = useState('');
+  const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
   const nav = useNavigation();
 
@@ -58,14 +58,16 @@ const AddDevice = () => {
       }
       try {
         values = await yup.validate(values, {abortEarly: false});
-      } catch(ex) {{
-        let _errors = {};
-        ex.inner.forEach(error => {
-          _errors ={..._errors, ...error.errors[0] }
-        })
-        setErrors(_errors)
-        return;
-      }}
+      } catch (ex) {
+        {
+          let _errors = {};
+          ex.inner.forEach(error => {
+            _errors = {..._errors, ...error.errors[0]};
+          });
+          setErrors(_errors);
+          return;
+        }
+      }
       try {
         const data = {
           ssid,
@@ -92,6 +94,9 @@ const AddDevice = () => {
         );
       } catch (ex) {
         console.log(ex);
+        store.notification.showError(
+          'Please enable both bluetooth and location access and try again.',
+        );
         throw new Error('Error while commuicating with device');
       }
 

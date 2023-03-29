@@ -102,25 +102,23 @@ const SearchDevices = () => {
     try {
       const isLocationGranted = await askLocationPermissionForBLEScan();
       if (!isLocationGranted) {
-        return Alert.alert(
-          '',
-          'You have to enable access to location to scan bluetooth devices nearby.',
+        store.notification.showError(
+          'You have to grant location permission to connect to nearby blueetooth devices.',
         );
         return;
       }
       const isGranted = await checkBluetoothPermission();
       if (!isGranted) {
-        return Alert.alert(
-          '',
+        store.notification.showError(
           'Permission to Bluetooth is denied. Please check in Settings App',
         );
+        return;
       }
       BLEManager.checkState();
       if (bleStatus !== 'on') {
         if (Platform.OS === 'ios') {
-          return Alert.alert(
-            '',
-            'Bluetooth is turned off for the device. Please turn on to search devices near by.',
+          store.notification.showError(
+            'Please turn on Bluetooth to search devices near by',
           );
         } else {
           await BLEManager.enableBluetooth();
@@ -132,7 +130,10 @@ const SearchDevices = () => {
       setSearching(true);
     } catch (ex) {
       setSearching(false);
-      console.log(ex);
+      console.log(ex, '------');
+      store.notification.showError(
+        'Please turn on both Bluetooth and GPS Location to search devices near by',
+      );
     }
   };
 
