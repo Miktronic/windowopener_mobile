@@ -157,10 +157,7 @@ const SearchDevices = () => {
       nav.navigate(Screens.addDevice, {peripheral: item});
     } catch (ex) {
       console.log(ex);
-      toast.show({
-        placement: 'top',
-        description: ex.message,
-      });
+      store.notification.showError(ex.message)
     }
     store.hud.hide();
 

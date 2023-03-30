@@ -36,7 +36,7 @@ function useViewModel() {
     try {
       const values = yup.validateSync({lowTemp, highTemp}, {abortEarly: false});
       console.log(lowTemp, highTemp);
-      if (lowTemp > highTemp) {
+      if (+lowTemp > +highTemp) {
         store.notification.showError(
           'Low temp range must be smaller than high temp range',
         );

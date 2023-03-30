@@ -599,10 +599,12 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = MotionAutomated/MotionAutomated.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 25CQNMLRY5;
+				DEVELOPMENT_TEAM = 3H82G52TAN;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = MotionAutomated/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Motion Automated";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -613,7 +615,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.motionautomatedllc.windowopenerios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.motionautomatedllc.windowopener;
 				PRODUCT_NAME = MotionAutomated;
 				SWIFT_OBJC_BRIDGING_HEADER = "MotionAutomated-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -632,8 +634,10 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 25CQNMLRY5;
+				DEVELOPMENT_TEAM = 3H82G52TAN;
 				INFOPLIST_FILE = MotionAutomated/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Motion Automated";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -644,7 +648,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.motionautomatedllc.windowopenertest;
+				PRODUCT_BUNDLE_IDENTIFIER = com.motionautomatedllc.windowopener;
 				PRODUCT_NAME = MotionAutomated;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "MotionAutomated-Bridging-Header.h";
