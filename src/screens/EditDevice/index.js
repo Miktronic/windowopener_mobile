@@ -18,23 +18,6 @@ import {confirmAlert} from '@/utils/alert';
 
 const yup = object().shape({
   name: string().trim().required(errorMessage('name', 'Enter name')),
-  type: string().trim().required(errorMessage('type', 'Select device type')),
-  country: object()
-    .shape({
-      id: string().required(),
-      name: string().required(),
-    })
-    .required(errorMessage('country', 'Select Country')),
-  state: object()
-    .shape({
-      id: string().required(),
-      name: string().required(),
-    })
-    .required(errorMessage('country', 'Select State')),
-  city: object().shape({
-    id: string(),
-    name: string(),
-  }),
 });
 
 const EditDevice = () => {
@@ -42,10 +25,10 @@ const EditDevice = () => {
   const route = useRoute();
   const device = route.params?.device;
   const [name, setName] = useState(device?.name);
-  const [country, setCountry] = useState(device?.country);
-  const [state, setState] = useState(device?.state);
-  const [city, setCity] = useState(device?.city);
-  const {countries, states, cities} = useGeoHooks(country, state);
+  // const [country, setCountry] = useState(device?.country);
+  // const [state, setState] = useState(device?.state);
+  // const [city, setCity] = useState(device?.city);
+  // const {countries, states, cities} = useGeoHooks(country, state);
   const [autoMode, setAutoMode] = useState(device?.autoMode ?? false);
   const [lowTemp, setLowTemp] = useState(`${device?.lowTemp}`);
   const [highTemp, setHighTemp] = useState(`${device?.highTemp}`);
@@ -86,12 +69,7 @@ const EditDevice = () => {
       let values = {
         name,
         type: 'opener',
-        country,
-        state,
       };
-      if (city) {
-        values.city = city;
-      }
       values = await yup.validate(values, {abortEarly: false});
 
       await Api.updateDevice(device.id, values);
@@ -128,60 +106,6 @@ const EditDevice = () => {
             autoCorrect={false}
           />
           <FormControl.ErrorMessage>{errors.name}</FormControl.ErrorMessage>
-        </FormControl>
-        <FormControl mt={3} isInvalid={!!errors.country}>
-          <FormControl.Label>Country</FormControl.Label>
-          <ModalSelector
-            data={countries}
-            keyExtractor={item => item.id}
-            labelExtractor={item => `${item.emoji} ${item.name}`}
-            animationType={'fade'}
-            onChange={option => {
-              // when country changed, clear out state and city
-              if (country?.id !== option.id) {
-                setState();
-                setCity();
-              }
-              setCountry(option);
-            }}
-            cancelText={'Cancel'}>
-            <FormInput editable={false} value={country?.name ?? ''} />
-          </ModalSelector>
-          <FormControl.ErrorMessage>{errors.country}</FormControl.ErrorMessage>
-        </FormControl>
-        <FormControl mt={3} isInvalid={!!errors.state}>
-          <FormControl.Label>State</FormControl.Label>
-          <ModalSelector
-            data={states}
-            animationType={'fade'}
-            keyExtractor={item => item.id}
-            labelExtractor={item => item.name}
-            onChange={option => {
-              // when state changed, clear out city
-              if (state?.id !== option.id) {
-                setCity();
-              }
-              setState(option);
-            }}
-            cancelText={'Cancel'}>
-            <FormInput editable={false} value={state?.name ?? ''} />
-          </ModalSelector>
-          <FormControl.ErrorMessage>{errors.state}</FormControl.ErrorMessage>
-        </FormControl>
-        <FormControl mt={3} isInvalid={!!errors.city}>
-          <FormControl.Label>City</FormControl.Label>
-          <ModalSelector
-            data={cities}
-            keyExtractor={item => item.id}
-            labelExtractor={item => item.name}
-            animationType={'fade'}
-            onChange={option => {
-              setCity(option);
-            }}
-            cancelText={'Cancel'}>
-            <FormInput editable={false} value={city?.name ?? ''} />
-          </ModalSelector>
-          <FormControl.ErrorMessage>{errors.city}</FormControl.ErrorMessage>
         </FormControl>
         <ActionButton mt={5} onPress={onPressSave}>
           Save

@@ -61,8 +61,8 @@ export async function signUp({email, password}) {
 }
 
 export async function logIn({email, password}) {
-  console.log(instance.defaults.baseURL)
-  console.log(instance.defaults.baseURL == 'http://198.211.108.247/api/v1')
+  console.log(instance.defaults.baseURL);
+  console.log(instance.defaults.baseURL == 'http://198.211.108.247/api/v1');
   return instance.post('/user/login', {email, password}).then(r => r.data);
 }
 
@@ -101,9 +101,6 @@ export async function addDevice(values) {
     .post('/device', {
       device_address: values.deviceId,
       alias: values.name,
-      country_id: values?.country?.id,
-      state_id: values?.state?.id,
-      city_id: values?.city?.id,
       status: 0,
       type: values.type,
     })
@@ -113,9 +110,6 @@ export async function addDevice(values) {
 export async function updateDevice(id, values) {
   return instance.put(`/device/${id}`, {
     alias: values.name,
-    country_id: values?.country?.id,
-    state_id: values?.state?.id,
-    city_id: values?.city?.id,
   });
 }
 export async function updateSingleDevice(id, values) {
@@ -160,12 +154,10 @@ export async function deleteDevice(id) {
 }
 
 export async function getLogs(page) {
-  return instance
-    .get('/log', { params: { page } })
-    .then(r => {
-      const data = r.data?.data;
-      return data;
-    });
+  return instance.get('/log', {params: {page}}).then(r => {
+    const data = r.data?.data;
+    return data;
+  });
 }
 
 export async function deleteLog(id) {
@@ -221,8 +213,8 @@ export async function resetPassword({email, otp}) {
     .then(r => r.data?.data);
 }
 
-export async function emailVerification({email,otp}) {
-  console.log(email, otp)
+export async function emailVerification({email, otp}) {
+  console.log(email, otp);
   return instance
     .post('/user/emailVerification', {email, otp})
     .then(r => r.data?.data);

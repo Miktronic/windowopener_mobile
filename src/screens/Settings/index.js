@@ -2,6 +2,7 @@
 import ActionButton from '@/components/buttons/ActionButton';
 import FormInput from '@/components/FormInput';
 import {useStore} from '@/hooks';
+import {useGeoHooks} from '@/hooks/geohooks';
 import * as Api from '@/services/api';
 import {apiError2Message} from '@/utils';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
@@ -12,6 +13,7 @@ import React, {useEffect, useState} from 'react';
 import {PermissionsAndroid, View} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import ModalSelector from 'react-native-modal-selector';
 
 const Settings = () => {
   const [name, setName] = useState('');
@@ -21,6 +23,11 @@ const Settings = () => {
   const [longitude, setLongitude] = useState('');
   const [isSelected, setIsSelected] = useState(false);
   const [location, setLocation] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [country, setCountry] = useState();
+  const [state, setState] = useState();
+  const [city, setCity] = useState();
+  const {countries, states, cities} = useGeoHooks(country, state);
   const store = useStore();
   const nav = useNavigation();
 
@@ -103,14 +110,6 @@ const Settings = () => {
           latitude: Number(location.coords.latitude),
           longitude: Number(location.coords.longitude),
         });
-
-        /* const place = await Location.reverseGeocodeAsync({
-          latitude: Number('51.507351'),
-          longitude: Number('-0.127758')
-        })  */
-
-        // console.log(place,'palce........')
-
         let placeName = place.map(p => {
           if (p.postalCode) {
             setZipCode(p.postalCode);
@@ -160,6 +159,9 @@ const Settings = () => {
         zip_code: zipCode,
         latitude,
         longitude,
+        country_id: country?.country?.id,
+        state_id: state?.state?.id,
+        city_id: city?.city?.id,
       });
       store.notification.showSuccess('Profile updated');
       nav.goBack();
@@ -191,9 +193,65 @@ const Settings = () => {
             autoCapitalize={'words'}
           />
         </FormControl>
-        <FormControl mt={3}>
+        {/* <FormControl mt={3}>
           <FormControl.Label>Address</FormControl.Label>
           <FormInput onChangeText={setAddress} value={address} />
+        </FormControl> */}
+
+        <FormControl mt={3} isInvalid={!!errors.country}>
+          <FormControl.Label>Country</FormControl.Label>
+          <ModalSelector
+            data={countries}
+            keyExtractor={item => item.id}
+            labelExtractor={item => `${item.emoji} ${item.name}`}
+            animationType={'fade'}
+            onChange={option => {
+              // when country changed, clear out state and city
+              if (country?.id !== option.id) {
+                setState();
+                setCity();
+              }
+              console.log(option);
+              setCountry(option);
+            }}
+            cancelText={'Cancel'}>
+            <FormInput editable={false} value={country?.name ?? ''} />
+          </ModalSelector>
+          <FormControl.ErrorMessage>{errors.country}</FormControl.ErrorMessage>
+        </FormControl>
+        <FormControl mt={3} isInvalid={!!errors.state}>
+          <FormControl.Label>State</FormControl.Label>
+          <ModalSelector
+            data={states}
+            animationType={'fade'}
+            keyExtractor={item => item.id}
+            labelExtractor={item => item.name}
+            onChange={option => {
+              // when state changed, clear out city
+              if (state?.id !== option.id) {
+                setCity();
+              }
+              setState(option);
+            }}
+            cancelText={'Cancel'}>
+            <FormInput editable={false} value={state?.name ?? ''} />
+          </ModalSelector>
+          <FormControl.ErrorMessage>{errors.state}</FormControl.ErrorMessage>
+        </FormControl>
+        <FormControl mt={3} isInvalid={!!errors.city}>
+          <FormControl.Label>City</FormControl.Label>
+          <ModalSelector
+            data={cities}
+            keyExtractor={item => item.id}
+            labelExtractor={item => item.name}
+            animationType={'fade'}
+            onChange={option => {
+              setCity(option);
+            }}
+            cancelText={'Cancel'}>
+            <FormInput editable={false} value={city?.name ?? ''} />
+          </ModalSelector>
+          <FormControl.ErrorMessage>{errors.city}</FormControl.ErrorMessage>
         </FormControl>
         <FormControl mt={3}>
           <FormControl.Label>Use GPS</FormControl.Label>

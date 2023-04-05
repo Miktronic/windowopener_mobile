@@ -29,10 +29,10 @@ const AddDevice = () => {
   const route = useRoute();
   const store = useStore();
   const [name, setName] = useState('');
-  const [country, setCountry] = useState();
-  const [state, setState] = useState();
-  const [city, setCity] = useState();
-  const {countries, states, cities} = useGeoHooks(country, state);
+  // const [country, setCountry] = useState();
+  // const [state, setState] = useState();
+  // const [city, setCity] = useState();
+  // const {countries, states, cities} = useGeoHooks(country, state);
   const [ssid, setSSID] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
@@ -50,12 +50,8 @@ const AddDevice = () => {
         deviceId: peripheral.name,
         name,
         type: 1,
-        country,
-        state,
       };
-      if (city?.id) {
-        values.city = city;
-      }
+
       try {
         values = await yup.validate(values, {abortEarly: false});
       } catch (ex) {
@@ -168,7 +164,7 @@ const AddDevice = () => {
           />
           <FormControl.ErrorMessage>{errors.name}</FormControl.ErrorMessage>
         </FormControl>
-        <FormControl mt={3} isInvalid={!!errors.country}>
+        {/* <FormControl mt={3} isInvalid={!!errors.country}>
           <FormControl.Label>Country</FormControl.Label>
           <ModalSelector
             data={countries}
@@ -221,7 +217,7 @@ const AddDevice = () => {
             <FormInput editable={false} value={city?.name ?? ''} />
           </ModalSelector>
           <FormControl.ErrorMessage>{errors.city}</FormControl.ErrorMessage>
-        </FormControl>
+        </FormControl> */}
         <ActionButton mt={5} onPress={onPressAdd}>
           Add
         </ActionButton>
