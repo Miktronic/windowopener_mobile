@@ -190,6 +190,9 @@ export async function updateUserProfile({
   zip_code,
   latitude,
   longitude,
+  city_id,
+  country_id,
+  state_id,
 }) {
   return instance
     .post('/user/profile', {
@@ -199,6 +202,9 @@ export async function updateUserProfile({
       zip_code,
       latitude,
       longitude,
+      city_id,
+      country_id,
+      state_id,
     })
     .then(r => r.data?.data);
 }

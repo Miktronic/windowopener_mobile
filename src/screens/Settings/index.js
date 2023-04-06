@@ -34,14 +34,28 @@ const Settings = () => {
   const loadProfile = async () => {
     try {
       store.hud.show();
-      const {name, gps_location, address, zip_code, latitude, longitude} =
-        await Api.getUserProfile();
+      const res = await Api.getUserProfile();
+      const {
+        name,
+        gps_location,
+        address,
+        zip_code,
+        latitude,
+        longitude,
+        country,
+        state,
+        city,
+      } = res;
+      console.log(res);
       setName(name);
       setIsSelected(false);
       setAddress(address);
       setZipCode(zip_code);
       setLatitude(latitude);
       setLongitude(longitude);
+      if (country) setCountry(country);
+      if (state) setState(state);
+      if (city) setCity(city);
     } catch (ex) {
       const apiError = apiError2Message(ex);
       if (apiError) {
@@ -152,17 +166,19 @@ const Settings = () => {
   const onPressSave = async () => {
     try {
       store.hud.show();
-      await Api.updateUserProfile({
+
+      let body = {
         name,
         gps_location: isSelected,
         address,
         zip_code: zipCode,
         latitude,
         longitude,
-        country_id: country?.country?.id,
-        state_id: state?.state?.id,
-        city_id: city?.city?.id,
-      });
+        country_id: country?.id,
+        state_id: state?.id,
+        city_id: city?.id,
+      };
+      await Api.updateUserProfile(body);
       store.notification.showSuccess('Profile updated');
       nav.goBack();
     } catch (ex) {
@@ -275,10 +291,10 @@ const Settings = () => {
             }
           </View>
         </FormControl>
-        <FormControl mt={3}>
+        {/* <FormControl mt={3}>
           <FormControl.Label>ZIP Code</FormControl.Label>
           <FormInput onChangeText={setZipCode} value={zipCode} />
-        </FormControl>
+        </FormControl> */}
         <FormControl mt={3}>
           <FormControl.Label>Latitude</FormControl.Label>
           <FormInput onChangeText={setLatitude} value={latitude} />
